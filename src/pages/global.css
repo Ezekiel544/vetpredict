@@ -228,6 +228,13 @@ nav {
   perspective: 900px;
   perspective-origin: 50% 50%;
 }
+.hero-img {
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+  filter: drop-shadow(0 20px 50px rgba(241,36,56,.25));
+}
 .orbit-scene {
   width: 100%;
   height: 100%;
@@ -1832,4 +1839,34 @@ footer a:hover { color: #fff; }
   .vp-globe { top: 555px !important; width: min(260px,76vw) !important; height: min(260px,76vw) !important; }
   .metric-a { transform: scale(.64); right: -3%; }
   .metric-b { transform: scale(.60); left: -3%; }
+}
+@media (max-width: 768px) {
+  .nav-predict-hide {
+    display: none;
+  }
+}
+.mobile-menu .red-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  align-self: flex-start;
+  margin-top: 8px;
+}
+.mobile-menu .red-btn {
+  background: #e53e3e !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  padding: 12px 24px !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  border: none !important;
+  cursor: pointer !important;
+  width: fit-content !important;
+  align-self: flex-start !important;
+  margin-top: 8px !important;
+}
+
+.mobile-menu .red-btn:hover {
+  background: #c53030 !important;
 }

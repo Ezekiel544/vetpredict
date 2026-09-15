@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchMarkets } from '../services/api';
+import Heroimg from './heroimg.png'
 import './global.css'
 // ─── Helpers ──────────────────────────────────────────────────
 function formatTimeLeft(closesAt) {
@@ -159,9 +160,9 @@ function Cube3D() {
         <div className="cube-orbit-ring" />
         <div className="cube-orbit-ring" />
       </div>
-      <div className="cube-float-badge">◈ 240+ Live Markets</div>
+      {/* <div className="cube-float-badge">◈ 240+ Live Markets</div>
       <div className="cube-float-badge">⚡ Instant Payouts</div>
-      <div className="cube-float-badge">🔒 Non-Custodial</div>
+      <div className="cube-float-badge"> Non-Custodial</div> */}
       <div className="cube-3d">
         <div className="cube-face front">
           <span className="face-icon">◈</span>
@@ -174,7 +175,7 @@ function Cube3D() {
           <div className="face-label">Platform Fee</div>
         </div>
         <div className="cube-face left">
-          <span className="face-icon">🌐</span>
+          <span className="face-icon"></span>
           <div className="face-val">10k<span>+</span></div>
           <div className="face-label">Predictors</div>
         </div>
@@ -184,12 +185,12 @@ function Cube3D() {
           <div className="face-label">Uptime</div>
         </div>
         <div className="cube-face top">
-          <span className="face-icon">💰</span>
+          <span className="face-icon"></span>
           <div className="face-val">2M<span>+</span></div>
           <div className="face-label">VET Traded</div>
         </div>
         <div className="cube-face bottom">
-          <span className="face-icon">🔒</span>
+          <span className="face-icon"></span>
           <div className="face-val">0</div>
           <div className="face-label">Exploits</div>
         </div>
@@ -283,7 +284,7 @@ function Modal({ mode, close, marketTitle }) {
           <>
             <h2>You&apos;re all set!</h2>
             <p>Your VetPredict journey starts here.</p>
-            <button type="button" className="red-btn modal-submit" onClick={close}>Explore markets <Arrow /></button>
+            <button type="button" className="red-btn modal-submit" onClick={close}>Explore markets </button>
           </>
         ) : (
           <>
@@ -475,9 +476,9 @@ export default function Landing() {
             <a href="#faq">FAQ</a>
           </div>
           <div className="nav-actions">
-            <button className="login" onClick={() => openAuth('login')}>Log in</button>
-            <button className="red-btn" onClick={signup}>Start predicting <Arrow /></button>
-            <button className="hamburger" onClick={() => setMenu(!menu)} aria-label="Menu">
+          <button className="login" onClick={() => openAuth('login')}>Log in</button>
+<button className="red-btn nav-predict-hide" onClick={signup}>Start predicting</button>
+<button className="hamburger" onClick={() => setMenu(!menu)} aria-label="Menu">
               <i /><i /><i />
             </button>
           </div>
@@ -491,7 +492,7 @@ export default function Landing() {
             <a href="#security" onClick={() => setMenu(false)}>Security</a>
             <a href="#faq"      onClick={() => setMenu(false)}>FAQ</a>
             <button onClick={() => { openAuth('login'); setMenu(false); }}>Log in</button>
-            <button className="red-btn" onClick={signup}>Start predicting <Arrow /></button>
+            <button className="red-btn" onClick={signup}>Start predicting </button>
           </div>
         )}
 
@@ -506,7 +507,7 @@ export default function Landing() {
             transparent prediction markets and earn VET for being right.
           </p>
           <div className="buttons">
-            <a className="red-btn" href="#markets" onClick={(e) => { e.preventDefault(); signup(); }}>Explore markets <Arrow /></a>
+            <a className="red-btn" href="#markets" onClick={(e) => { e.preventDefault(); signup(); }}>Explore markets </a>
             <a className="ghost-btn" href="#how">How it works ↓</a>
           </div>
           <div className="proof">
@@ -515,7 +516,12 @@ export default function Landing() {
           </div>
         </div>
 
-        <OrbitGlobe />
+        {/* <OrbitGlobe /> */}
+               <img
+          src={Heroimg}
+          alt="VetPredict"
+          className="vp-globe hero-img"
+        />
 
         <div className="ticker">
           <span>VET <b>$0.033</b> <i>+2.81%</i></span>
@@ -574,7 +580,7 @@ export default function Landing() {
             <p className="eyebrow"><i /> The signal is yours</p>
             <h2>Know the world.<br /><span>Own your insight.</span></h2>
             <p>VetPredict turns your informed opinions into positions with a clear, elegant experience from market to payout.</p>
-            <button className="red-btn" onClick={signup}>Start predicting <Arrow /></button>
+            <button className="red-btn" onClick={signup}>Start predicting </button>
           </div>
           <div className="signal-art">
             <div className="signal-core"><small>VET</small><b>◈</b></div>
