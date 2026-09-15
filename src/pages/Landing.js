@@ -322,7 +322,7 @@ function Modal({ mode, close, marketTitle }) {
                 ◇ {loading ? 'Connecting...' : 'Connect VeWorld wallet'}
               </button>
             )}
-            <button
+            {/* <button
               type="button"
               className="wallet-btn"
               style={{ marginTop: 8 }}
@@ -335,13 +335,13 @@ function Modal({ mode, close, marketTitle }) {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
               Continue with Google
-            </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '10px 0', opacity: 0.4, fontSize: 12 }}>
+            </button> */}
+            {/* <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '10px 0', opacity: 0.4, fontSize: 12 }}>
               <span style={{ flex: 1, height: 1, background: 'currentColor' }} />
               or with email
               <span style={{ flex: 1, height: 1, background: 'currentColor' }} />
-            </div>
-            {tab === 'signup' && (
+            </div> */}
+            {/* {tab === 'signup' && (
               <input placeholder="Display name" value={form.displayName} onChange={set('displayName')} required />
             )}
             <input type="email" placeholder="Email address" value={form.email} onChange={set('email')} onKeyDown={(e) => e.key === 'Enter' && handleEmail()} required />
@@ -355,8 +355,8 @@ function Modal({ mode, close, marketTitle }) {
                   Forgot password?
                 </span>
               </div>
-            )}
-            <button type="submit" className="red-btn modal-submit" disabled={loading}>
+            )} */}
+            {/* <button type="submit" className="red-btn modal-submit" disabled={loading}>
               {loading ? 'Please wait...' : tab === 'signup' ? 'Create free account' : 'Log in'} {!loading && <Arrow />}
             </button>
             <p style={{ textAlign: 'center', fontSize: 12, marginTop: 10, opacity: 0.5 }}>
@@ -364,7 +364,7 @@ function Modal({ mode, close, marketTitle }) {
                 ? <><span>Already have an account? </span><span style={{ cursor: 'pointer', opacity: 1, textDecoration: 'underline' }} onClick={() => setTab('login')}>Log in</span></>
                 : <><span>No account? </span><span style={{ cursor: 'pointer', opacity: 1, textDecoration: 'underline' }} onClick={() => setTab('signup')}>Sign up free</span></>
               }
-            </p>
+            </p> */}
           </>
         )}
       </form>
