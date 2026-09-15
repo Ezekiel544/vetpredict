@@ -4749,3 +4749,603 @@ nav {
     transition: none !important;
   }
 }
+/* =========================================================
+   MOBILE NAV + HERO FIX
+   VetPredict
+   ========================================================= */
+
+/* Desktop defaults */
+.nav-predict-hide {
+  display: inline-flex;
+}
+
+.hamburger {
+  display: none;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1024px) {
+
+  .hero {
+    min-height: 760px;
+    overflow: hidden;
+  }
+
+  .hero-copy {
+    max-width: 680px;
+  }
+
+  .hero h1 {
+    font-size: clamp(52px, 7vw, 82px);
+    line-height: .98;
+  }
+
+  /*
+   * Keep the hero artwork inside the viewport.
+   * Do not let it become wider than the screen.
+   */
+  .hero-img {
+    width: min(48vw, 540px);
+    max-width: 540px;
+    height: auto;
+    object-fit: contain;
+  }
+}
+
+
+/* =========================================================
+   MOBILE NAVIGATION
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  /* -------------------------------------------------------
+     HERO
+     ------------------------------------------------------- */
+
+  .hero {
+    min-height: auto;
+    height: auto;
+    padding-bottom: 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /*
+   * Keep navigation above EVERYTHING.
+   */
+  .hero nav {
+    position: relative;
+    z-index: 100;
+  }
+
+  /* Hide desktop Start Predicting button */
+  .nav-predict-hide {
+    display: none !important;
+  }
+
+  /* Hide desktop navigation links */
+  .nav-links {
+    display: none !important;
+  }
+
+  /*
+   * Keep only login + hamburger in the top bar.
+   */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  .login {
+    display: inline-flex;
+  }
+
+  /* Hamburger */
+  .hamburger {
+    display: flex !important;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    background: rgba(255,255,255,.055);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    position: relative;
+    z-index: 110;
+    transition:
+      background .25s ease,
+      border-color .25s ease,
+      transform .25s ease;
+  }
+
+  .hamburger:hover {
+    background: rgba(255,255,255,.10);
+    border-color: rgba(255,255,255,.18);
+  }
+
+  .hamburger:active {
+    transform: scale(.94);
+  }
+
+  .hamburger i {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 10px;
+    background: currentColor;
+    transition:
+      transform .25s ease,
+      opacity .2s ease;
+  }
+
+
+  /* -------------------------------------------------------
+     MOBILE MENU
+     ------------------------------------------------------- */
+
+  /*
+   * IMPORTANT:
+   * The menu is inside .hero, so give it a real surface.
+   * This prevents the old transparent/washed-out appearance.
+   */
+  .mobile-menu {
+    display: flex;
+    position: absolute;
+    top: 78px;
+    left: 12px;
+    right: 12px;
+
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 14px;
+
+    background:
+      linear-gradient(
+        180deg,
+        rgba(20,20,24,.98) 0%,
+        rgba(12,12,15,.98) 100%
+      );
+
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 18px;
+
+    box-shadow:
+      0 25px 70px rgba(0,0,0,.42),
+      0 8px 30px rgba(0,0,0,.22);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    z-index: 90;
+
+    animation: mobileMenuIn .28s cubic-bezier(.2,.8,.2,1);
+  }
+
+  @keyframes mobileMenuIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .mobile-menu a,
+  .mobile-menu > button:not(.red-btn) {
+    width: 100%;
+    min-height: 48px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 15px;
+
+    border-radius: 11px;
+
+    color: inherit;
+    text-decoration: none;
+
+    background: transparent;
+    border: 0;
+
+    font-size: 15px;
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+      background .2s ease,
+      transform .2s ease;
+  }
+
+  .mobile-menu a:hover,
+  .mobile-menu > button:not(.red-btn):hover {
+    background: rgba(255,255,255,.07);
+    transform: translateX(3px);
+  }
+
+
+  /*
+   * START PREDICTING
+   *
+   * This is the important part:
+   * The red CTA belongs INSIDE the hamburger menu on mobile.
+   */
+  .mobile-menu .red-btn {
+    width: 100%;
+    min-height: 52px;
+
+    margin-top: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    /* Uses your existing button colour */
+    background: var(--red, #ef4444);
+    color: #fff;
+
+    border: 0;
+
+    box-shadow:
+      0 10px 30px rgba(239,68,68,.20);
+
+    transition:
+      transform .2s ease,
+      box-shadow .2s ease,
+      filter .2s ease;
+  }
+
+  .mobile-menu .red-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow:
+      0 14px 34px rgba(239,68,68,.28);
+  }
+
+  .mobile-menu .red-btn:active {
+    transform: translateY(0) scale(.98);
+  }
+
+
+  /* -------------------------------------------------------
+     HERO CONTENT
+     ------------------------------------------------------- */
+
+  .hero-copy {
+    width: 100%;
+    max-width: none;
+
+    padding:
+      82px
+      20px
+      35px;
+
+    position: relative;
+    z-index: 5;
+  }
+
+  .hero-copy .eyebrow {
+    margin-bottom: 18px;
+  }
+
+  .hero h1 {
+    width: 100%;
+    max-width: 700px;
+
+    font-size: clamp(42px, 12vw, 68px);
+    line-height: .98;
+    letter-spacing: -.045em;
+
+    margin-bottom: 22px;
+  }
+
+  .hero-copy > p:not(.eyebrow) {
+    max-width: 540px;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+
+  /* -------------------------------------------------------
+     HERO BUTTONS
+     ------------------------------------------------------- */
+
+  .hero-copy .buttons {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    max-width: 430px;
+
+    gap: 10px;
+
+    margin-top: 26px;
+  }
+
+  .hero-copy .buttons .red-btn,
+  .hero-copy .buttons .ghost-btn {
+    width: 100%;
+    min-height: 52px;
+
+    justify-content: center;
+  }
+
+
+  /* -------------------------------------------------------
+     HERO PROOF
+     ------------------------------------------------------- */
+
+  .proof {
+    margin-top: 28px;
+  }
+
+
+  /* -------------------------------------------------------
+     HERO IMAGE
+     ------------------------------------------------------- */
+
+  /*
+   * Previously the artwork could become wider than its
+   * container and get clipped.
+   *
+   * On mobile it becomes a normal flow element.
+   */
+  .hero-img {
+    position: relative !important;
+
+    display: block;
+
+    width: min(92vw, 500px) !important;
+    max-width: 500px !important;
+
+    height: auto !important;
+
+    margin:
+      18px
+      auto
+      10px;
+
+    object-fit: contain;
+
+    transform: none !important;
+
+    z-index: 2;
+
+    /*
+     * Prevent the image from being pushed outside
+     * the viewport.
+     */
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+  }
+
+
+  /*
+   * If the image has a glow/shadow from the desktop
+   * design, keep it subtle on mobile.
+   */
+  .hero-img {
+    filter: drop-shadow(
+      0 25px 45px rgba(0,0,0,.20)
+    );
+  }
+
+
+  /* -------------------------------------------------------
+     TICKER
+     ------------------------------------------------------- */
+
+  .ticker {
+    position: relative !important;
+
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+
+    width: 100%;
+
+    margin-top: 22px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    display: flex;
+
+    justify-content: flex-start;
+
+    padding:
+      14px
+      20px;
+
+    gap: 28px;
+
+    white-space: nowrap;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: none;
+  }
+
+  .ticker::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ticker span {
+    flex: 0 0 auto;
+  }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .hero {
+    overflow: hidden;
+  }
+
+  .hero nav {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .brand {
+    font-size: 15px;
+  }
+
+  .brand i {
+    font-size: 18px;
+  }
+
+  .nav-actions {
+    gap: 7px;
+  }
+
+  .login {
+    font-size: 13px;
+  }
+
+  .hamburger {
+    width: 43px;
+    height: 43px;
+  }
+
+  /*
+   * Mobile menu sits slightly closer to the navbar.
+   */
+  .mobile-menu {
+    top: 70px;
+    left: 10px;
+    right: 10px;
+
+    padding: 12px;
+
+    border-radius: 16px;
+  }
+
+  .mobile-menu a,
+  .mobile-menu > button:not(.red-btn) {
+    min-height: 46px;
+    font-size: 14px;
+  }
+
+  .mobile-menu .red-btn {
+    min-height: 50px;
+  }
+
+  .hero-copy {
+    padding:
+      68px
+      17px
+      26px;
+  }
+
+  .hero h1 {
+    font-size: clamp(39px, 11.8vw, 56px);
+    line-height: .97;
+    letter-spacing: -.05em;
+  }
+
+  .hero-copy > p:not(.eyebrow) {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .hero-copy .buttons {
+    max-width: none;
+  }
+
+  .hero-img {
+    width: 94vw !important;
+    max-width: 430px !important;
+
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+
+  .ticker {
+    padding-left: 17px;
+    padding-right: 17px;
+
+    gap: 22px;
+
+    font-size: 11px;
+  }
+
+  .proof {
+    transform: scale(.94);
+    transform-origin: left center;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .hero-copy {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+  }
+
+  .hero-img {
+    width: 96vw !important;
+  }
+
+  .mobile-menu {
+    left: 8px;
+    right: 8px;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY / REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .mobile-menu,
+  .mobile-menu a,
+  .mobile-menu button,
+  .hamburger,
+  .hero-img {
+    animation: none !important;
+    transition: none !important;
+  }
+}
