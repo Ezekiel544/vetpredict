@@ -3000,6 +3000,9 @@ nav {
   border-color: rgba(241,36,56,.24);
 }
 
+
+
+
 /* =========================================================
    ACTIVITY FEED
 ========================================================= */
@@ -3719,6 +3722,8 @@ nav {
     color 180ms ease,
     transform 180ms ease;
 }
+
+
 
 .vp-site .nav-links a::after {
   content: "";
@@ -5363,5 +5368,503 @@ nav {
 @media (max-width: 480px) {
   .hero-img {
     margin-top: -9px !important;
+  }
+}
+
+
+/* =========================================================
+   HERO — IMAGELESS 3D MARKET CORE
+   This pass intentionally touches ONLY the hero visual.
+   Existing sections/styles above remain intact.
+   ========================================================= */
+
+.vp-site .hero-3d-rig {
+  --hero-rx: 0;
+  --hero-ry: 0;
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  right: clamp(-90px, 0vw, 20px);
+  width: min(760px, 57vw);
+  aspect-ratio: 1;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  transform: translateY(-48%) rotateX(calc(var(--hero-rx) * 1deg)) rotateY(calc(var(--hero-ry) * 1deg));
+  transition: filter 500ms ease;
+  filter: drop-shadow(0 45px 80px rgba(0,0,0,.5));
+  touch-action: pan-y;
+}
+
+.vp-site .hero-3d-rig:hover {
+  filter: drop-shadow(0 55px 100px rgba(0,0,0,.62));
+}
+
+.vp-site .hero-3d-scene {
+  position: absolute;
+  inset: 4%;
+  transform-style: preserve-3d;
+  animation: vp-hero-breathe 8s ease-in-out infinite;
+}
+
+.vp-site .hero-3d-aura {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.vp-site .aura-one {
+  width: 58%;
+  height: 58%;
+  left: 21%;
+  top: 21%;
+  background: radial-gradient(circle, rgba(239,68,68,.2), rgba(239,68,68,.035) 45%, transparent 72%);
+  filter: blur(24px);
+  animation: vp-aura-pulse 4.5s ease-in-out infinite;
+}
+
+.vp-site .aura-two {
+  width: 82%;
+  height: 82%;
+  left: 9%;
+  top: 9%;
+  border: 1px solid rgba(239,68,68,.08);
+  box-shadow: 0 0 80px rgba(239,68,68,.06), inset 0 0 80px rgba(239,68,68,.035);
+  animation: vp-aura-spin 24s linear infinite;
+}
+
+/* The central living object */
+.vp-site .market-sphere {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 47%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  border-radius: 50%;
+  isolation: isolate;
+}
+
+.vp-site .sphere-shell {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 31% 24%, rgba(255,255,255,.16), transparent 8%),
+    radial-gradient(circle at 38% 34%, rgba(239,68,68,.22), transparent 30%),
+    radial-gradient(circle at 65% 70%, rgba(0,0,0,.9), transparent 58%),
+    rgba(7,9,13,.72);
+  border: 1px solid rgba(255,255,255,.17);
+  box-shadow:
+    inset -28px -30px 55px rgba(0,0,0,.9),
+    inset 18px 14px 35px rgba(255,255,255,.045),
+    0 0 0 1px rgba(239,68,68,.06),
+    0 0 42px rgba(239,68,68,.2),
+    0 0 110px rgba(239,68,68,.08);
+  overflow: hidden;
+}
+
+.vp-site .sphere-shell::before,
+.vp-site .sphere-shell::after {
+  content: "";
+  position: absolute;
+  inset: 4%;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.vp-site .sphere-shell::after {
+  inset: 13%;
+  border-color: rgba(239,68,68,.12);
+}
+
+.vp-site .sphere-grid {
+  position: absolute;
+  inset: -3%;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.vp-site .sphere-grid::before,
+.vp-site .sphere-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(239,68,68,.22);
+  border-radius: 50%;
+}
+
+.vp-site .sphere-grid-a {
+  transform: rotateY(67deg);
+  animation: vp-globe-wobble-a 10s ease-in-out infinite;
+}
+
+.vp-site .sphere-grid-b {
+  transform: rotateX(67deg) rotateZ(25deg);
+  animation: vp-globe-wobble-b 12s ease-in-out infinite reverse;
+}
+
+.vp-site .sphere-grid-a::after {
+  inset: 17% 0;
+  border-color: rgba(255,255,255,.075);
+}
+
+.vp-site .sphere-grid-b::after {
+  inset: 0 17%;
+  border-color: rgba(255,255,255,.06);
+}
+
+.vp-site .sphere-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) translateZ(70px);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+}
+
+.vp-site .core-dot {
+  width: 23%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 9px 4px rgba(255,255,255,.9), 0 0 35px 12px rgba(239,68,68,.8);
+  animation: vp-core-beat 2.2s ease-in-out infinite;
+}
+
+.vp-site .core-pulse {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: 50%;
+  animation: vp-core-wave 2.6s ease-out infinite;
+}
+
+.vp-site .pulse-b { animation-delay: 1.3s; }
+
+/* Dozens of actual 3D points make the sphere feel computational, not decorative. */
+.vp-site .sphere-particles {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: vp-particle-field 20s linear infinite;
+}
+
+.vp-site .sphere-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--particle-size);
+  height: var(--particle-size);
+  margin: calc(var(--particle-size) / -2) 0 0 calc(var(--particle-size) / -2);
+  border-radius: 50%;
+  background: rgba(255,255,255,.86);
+  box-shadow: 0 0 7px rgba(239,68,68,.8);
+  transform-style: preserve-3d;
+  transform: rotateY(var(--particle-ry)) rotateX(var(--particle-rx)) translateZ(var(--particle-z));
+  animation: vp-particle-flicker 2.8s ease-in-out var(--particle-delay) infinite;
+}
+
+.vp-site .market-node {
+  position: absolute;
+  z-index: 8;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 999px;
+  background: rgba(8,9,13,.72);
+  backdrop-filter: blur(9px);
+  -webkit-backdrop-filter: blur(9px);
+  color: rgba(255,255,255,.8);
+  font: 700 7px/1 Manrope, sans-serif;
+  letter-spacing: .08em;
+  box-shadow: 0 8px 22px rgba(0,0,0,.25);
+  transform-style: preserve-3d;
+  animation: vp-node-float 5s ease-in-out infinite;
+}
+
+.vp-site .market-node i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--vp-red);
+  box-shadow: 0 0 9px rgba(239,68,68,.85);
+}
+
+.vp-site .node-a { left: 7%; top: 29%; transform: translateZ(70px); }
+.vp-site .node-b { right: 5%; top: 39%; transform: translateZ(120px); animation-delay: -1.1s; }
+.vp-site .node-c { right: 16%; bottom: 19%; transform: translateZ(80px); animation-delay: -2.2s; }
+.vp-site .node-d { left: 12%; bottom: 22%; transform: translateZ(105px); animation-delay: -3.1s; }
+
+/* Four physical orbit planes. Each one carries a moving signal point. */
+.vp-site .hero-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 72%;
+  height: 72%;
+  border: 1px solid rgba(239,68,68,.2);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.vp-site .hero-orbit::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid rgba(255,255,255,.035);
+  filter: blur(.3px);
+}
+
+.vp-site .hero-orbit span {
+  position: absolute;
+  left: 50%;
+  top: -5px;
+  width: 9px;
+  height: 9px;
+  margin-left: -4.5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 12px 4px rgba(239,68,68,.85), 0 0 30px rgba(239,68,68,.5);
+}
+
+.vp-site .orbit-one { transform: translate(-50%,-50%) rotateX(67deg) rotateZ(12deg); animation: vp-orbit-one 12s linear infinite; }
+.vp-site .orbit-two { width: 87%; height: 58%; transform: translate(-50%,-50%) rotateY(67deg) rotateZ(-18deg); animation: vp-orbit-two 15s linear infinite reverse; border-color: rgba(255,255,255,.11); }
+.vp-site .orbit-three { width: 96%; height: 42%; transform: translate(-50%,-50%) rotateX(76deg) rotateZ(-35deg); animation: vp-orbit-three 18s linear infinite; border-color: rgba(239,68,68,.12); }
+.vp-site .orbit-four { width: 55%; height: 94%; transform: translate(-50%,-50%) rotateY(72deg) rotateZ(48deg); animation: vp-orbit-four 21s linear infinite reverse; border-color: rgba(255,255,255,.055); }
+
+.vp-site .signal-line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 1px;
+  width: 44%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, rgba(239,68,68,0), rgba(239,68,68,.6), rgba(255,255,255,0));
+  opacity: .5;
+  filter: drop-shadow(0 0 5px rgba(239,68,68,.6));
+  animation: vp-signal 3.2s ease-in-out infinite;
+}
+
+.vp-site .signal-one { transform: rotate(22deg) translateZ(50px); }
+.vp-site .signal-two { transform: rotate(153deg) translateZ(20px); animation-delay: -1.1s; }
+.vp-site .signal-three { transform: rotate(-55deg) translateZ(90px); animation-delay: -2.1s; }
+
+.vp-site .floating-readout {
+  position: absolute;
+  z-index: 15;
+  min-width: 112px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 10px;
+  background: rgba(8,9,13,.68);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 15px 40px rgba(0,0,0,.3);
+  transform-style: preserve-3d;
+  animation: vp-readout-float 5.8s ease-in-out infinite;
+}
+
+.vp-site .floating-readout span {
+  display: block;
+  color: rgba(255,255,255,.38);
+  font: 700 7px/1 Manrope, sans-serif;
+  letter-spacing: .1em;
+}
+
+.vp-site .floating-readout b {
+  display: inline-block;
+  margin-top: 6px;
+  color: #fff;
+  font: 800 17px/1 Manrope, sans-serif;
+  letter-spacing: -.04em;
+}
+
+.vp-site .floating-readout i {
+  margin-left: 6px;
+  color: var(--vp-green);
+  font: 700 7px/1 Manrope, sans-serif;
+  font-style: normal;
+}
+
+.vp-site .readout-a { right: 4%; top: 12%; }
+.vp-site .readout-b { left: 2%; bottom: 9%; animation-delay: -2.8s; }
+
+/* Keep the existing metric cards, but make them belong to the new 3D system. */
+.vp-site .hero-3d-rig .metric {
+  z-index: 20;
+  border-color: rgba(255,255,255,.11);
+  background: rgba(9,10,14,.66);
+  box-shadow: 0 20px 45px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.vp-site .hero-3d-rig .metric-a { right: 0; top: 23%; }
+.vp-site .hero-3d-rig .metric-b { left: 0; bottom: 19%; }
+
+@keyframes vp-hero-breathe {
+  0%,100% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(0,-8px,0) scale(1.012); }
+}
+
+@keyframes vp-aura-pulse {
+  0%,100% { opacity: .65; transform: scale(.92); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes vp-aura-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes vp-particle-field {
+  from { transform: rotateY(0deg) rotateX(0deg); }
+  to { transform: rotateY(360deg) rotateX(8deg); }
+}
+
+@keyframes vp-particle-flicker {
+  0%,100% { opacity: .3; scale: .72; }
+  45% { opacity: .95; scale: 1; }
+  65% { opacity: .65; scale: .9; }
+}
+
+@keyframes vp-core-beat {
+  0%,100% { transform: scale(.75); opacity: .72; }
+  50% { transform: scale(1.35); opacity: 1; }
+}
+
+@keyframes vp-core-wave {
+  0% { transform: scale(.4); opacity: .9; }
+  100% { transform: scale(3.8); opacity: 0; }
+}
+
+@keyframes vp-globe-wobble-a {
+  0%,100% { transform: rotateY(67deg) rotateZ(-3deg); }
+  50% { transform: rotateY(74deg) rotateZ(5deg); }
+}
+
+@keyframes vp-globe-wobble-b {
+  0%,100% { transform: rotateX(67deg) rotateZ(25deg); }
+  50% { transform: rotateX(72deg) rotateZ(31deg); }
+}
+
+@keyframes vp-orbit-one {
+  from { transform: translate(-50%,-50%) rotateX(67deg) rotateZ(12deg) rotate(0deg); }
+  to { transform: translate(-50%,-50%) rotateX(67deg) rotateZ(12deg) rotate(360deg); }
+}
+
+@keyframes vp-orbit-two {
+  from { transform: translate(-50%,-50%) rotateY(67deg) rotateZ(-18deg) rotate(0deg); }
+  to { transform: translate(-50%,-50%) rotateY(67deg) rotateZ(-18deg) rotate(-360deg); }
+}
+
+@keyframes vp-orbit-three {
+  from { transform: translate(-50%,-50%) rotateX(76deg) rotateZ(-35deg) rotate(0deg); }
+  to { transform: translate(-50%,-50%) rotateX(76deg) rotateZ(-35deg) rotate(360deg); }
+}
+
+@keyframes vp-orbit-four {
+  from { transform: translate(-50%,-50%) rotateY(72deg) rotateZ(48deg) rotate(0deg); }
+  to { transform: translate(-50%,-50%) rotateY(72deg) rotateZ(48deg) rotate(-360deg); }
+}
+
+@keyframes vp-signal {
+  0%,100% { opacity: .08; transform-origin: left center; scale: .45 1; }
+  45% { opacity: .75; scale: 1 1; }
+  65% { opacity: .15; scale: .7 1; }
+}
+
+@keyframes vp-node-float {
+  0%,100% { translate: 0 0; }
+  50% { translate: 0 -9px; }
+}
+
+@keyframes vp-readout-float {
+  0%,100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 0 -8px; rotate: -1deg; }
+}
+
+/* =========================================================
+   HERO 3D — RESPONSIVE OVERRIDES
+   ========================================================= */
+
+@media (max-width: 1050px) {
+  .vp-site .hero-3d-rig {
+    width: min(650px, 58vw);
+    right: -80px;
+  }
+
+  .vp-site .hero-3d-rig .metric { transform: scale(.86); }
+  .vp-site .floating-readout { transform: scale(.9); }
+}
+
+@media (max-width: 820px) {
+  .vp-site .hero-3d-rig {
+    width: min(590px, 88vw);
+    right: 50%;
+    top: auto;
+    bottom: 74px;
+    transform: translateX(50%) rotateX(calc(var(--hero-rx) * 1deg)) rotateY(calc(var(--hero-ry) * 1deg));
+  }
+
+  .vp-site .hero-3d-scene { inset: 3%; }
+  .vp-site .hero-3d-rig .metric-a { right: -1%; top: 13%; }
+  .vp-site .hero-3d-rig .metric-b { left: -1%; bottom: 7%; }
+  .vp-site .hero-3d-rig .metric { transform: scale(.76); transform-origin: center; }
+  .vp-site .floating-readout { transform: scale(.78); }
+}
+
+@media (max-width: 600px) {
+  .vp-site .hero-3d-rig {
+    width: min(520px, 112vw);
+    bottom: 60px;
+  }
+
+  .vp-site .hero-copy { position: relative; z-index: 12; }
+  .vp-site .hero-3d-rig .metric { transform: scale(.64); }
+  .vp-site .floating-readout { display: none; }
+  .vp-site .market-node { font-size: 6px; padding: 5px 7px; }
+  .vp-site .market-node i { width: 4px; height: 4px; }
+  .vp-site .hero-orbit span { width: 7px; height: 7px; margin-left: -3.5px; top: -4px; }
+}
+
+@media (max-width: 390px) {
+  .vp-site .hero-3d-rig {
+    width: 126vw;
+    bottom: 53px;
+  }
+
+  .vp-site .hero-3d-rig .metric { transform: scale(.56); }
+  .vp-site .market-node { display: none; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .vp-site .hero-3d-rig:hover { filter: drop-shadow(0 45px 80px rgba(0,0,0,.5)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vp-site .hero-3d-rig,
+  .vp-site .hero-3d-scene,
+  .vp-site .hero-3d-aura,
+  .vp-site .sphere-particles,
+  .vp-site .sphere-grid,
+  .vp-site .hero-orbit,
+  .vp-site .signal-line,
+  .vp-site .market-node,
+  .vp-site .floating-readout,
+  .vp-site .core-dot,
+  .vp-site .core-pulse {
+    animation: none !important;
   }
 }

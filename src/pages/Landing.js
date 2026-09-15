@@ -1,125 +1,398 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchMarkets } from '../services/api';
-import Heroimg from './heroimg.png'
-import './global.css'
-// ─── Helpers ──────────────────────────────────────────────────
+import Heroimg from './heroimg.png';
+import './global.css';
+
+// ─────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────
+
 function formatTimeLeft(closesAt) {
   if (!closesAt) return 'Live';
-  const ms = new Date(closesAt).getTime() - Date.now();
+
+  const closeTime = new Date(closesAt).getTime();
+
+  if (Number.isNaN(closeTime)) return 'Live';
+
+  const ms = closeTime - Date.now();
+
   if (ms <= 0) return 'Closed';
-  const h  = Math.floor(ms / 3600000);
-  const d  = Math.floor(ms / 86400000);
+
+  const h = Math.floor(ms / 3600000);
+  const d = Math.floor(ms / 86400000);
   const mo = Math.floor(d / 30);
   const yr = Math.floor(d / 365);
+
   if (yr >= 1) return `${yr}y left`;
   if (mo >= 1) return `${mo}mo left`;
-  if (d  >= 1) return `${d}d left`;
+  if (d >= 1) return `${d}d left`;
+
   return `${h}h left`;
 }
 
-const isMobile = () =>
-  /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const isMobile = () => {
+  if (typeof navigator === 'undefined') return false;
 
-// ─── Static data ──────────────────────────────────────────────
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+};
+
+// ─────────────────────────────────────────────────────────────
+// STATIC MARKETS
+// ─────────────────────────────────────────────────────────────
+
 const STATIC_MARKETS = [
-  { _id: '1', category: 'Crypto',        title: 'Will Bitcoin close above $120,000 this month?',           yesPercent: 68, pool: '42,860 VET' },
-  { _id: '2', category: 'Sports',        title: 'Will Arsenal win their next Premier League match?',        yesPercent: 74, pool: '18,240 VET' },
-  { _id: '3', category: 'Entertainment', title: "Will this film win Best Picture at next year's awards?",   yesPercent: 41, pool: '9,670 VET'  },
-  { _id: '4', category: 'Politics',      title: 'Will the proposed trade bill pass this quarter?',          yesPercent: 57, pool: '24,110 VET' },
-  { _id: '5', category: 'Gaming',        title: 'Will the new release reach one million players?',          yesPercent: 82, pool: '12,890 VET' },
-  { _id: '6', category: 'Stocks',        title: 'Will the index finish the week in green?',                 yesPercent: 53, pool: '31,420 VET' },
+  {
+    _id: '1',
+    category: 'Crypto',
+    title: 'Will Bitcoin close above $120,000 this month?',
+    yesPercent: 68,
+    pool: '42,860 VET',
+  },
+  {
+    _id: '2',
+    category: 'Sports',
+    title: 'Will Arsenal win their next Premier League match?',
+    yesPercent: 74,
+    pool: '18,240 VET',
+  },
+  {
+    _id: '3',
+    category: 'Entertainment',
+    title: "Will this film win Best Picture at next year's awards?",
+    yesPercent: 41,
+    pool: '9,670 VET',
+  },
+  {
+    _id: '4',
+    category: 'Politics',
+    title: 'Will the proposed trade bill pass this quarter?',
+    yesPercent: 57,
+    pool: '24,110 VET',
+  },
+  {
+    _id: '5',
+    category: 'Gaming',
+    title: 'Will the new release reach one million players?',
+    yesPercent: 82,
+    pool: '12,890 VET',
+  },
+  {
+    _id: '6',
+    category: 'Stocks',
+    title: 'Will the index finish the week in green?',
+    yesPercent: 53,
+    pool: '31,420 VET',
+  },
 ];
 
-const FILTERS = ['All', 'Sports', 'Crypto', 'Entertainment', 'Politics', 'Gaming', 'Stocks'];
+const FILTERS = [
+  'All',
+  'Sports',
+  'Crypto',
+  'Entertainment',
+  'Politics',
+  'Gaming',
+  'Stocks',
+];
+
+// ─────────────────────────────────────────────────────────────
+// FAQ
+// ─────────────────────────────────────────────────────────────
 
 const FAQS = [
-  ['What is VetPredict?',       'VetPredict is a decentralised prediction market built on VeChain. Predict real-world outcomes and earn VET when you are right.'],
-  ['Are my funds safe?',        'VetPredict is non-custodial: your funds stay in your wallet and every transaction is transparent on-chain. We never hold your assets.'],
-  ['What are the fees?',        'VetPredict charges a flat 2% platform fee on winnings only. No subscription, no deposit fees, no hidden charges.'],
-  ['How are markets resolved?', 'A combination of trusted oracles and decentralised verification determines outcomes, then smart contracts distribute payouts automatically within seconds.'],
-  ['Can I create my own market?','Yes. Verified users can propose markets through the DAO. Approved markets go live within 24 hours and earn a share of platform fees.'],
-  ['Which wallets are supported?','VeWorld is the native wallet. You can also sign in with Google or email — we create a managed VeChain wallet for you automatically.'],
+  [
+    'What is VetPredict?',
+    'VetPredict is a decentralised prediction market built on VeChain. Predict real-world outcomes and earn VET when you are right.',
+  ],
+  [
+    'Are my funds safe?',
+    'VetPredict is non-custodial: your funds stay in your wallet and every transaction is transparent on-chain. We never hold your assets.',
+  ],
+  [
+    'What are the fees?',
+    'VetPredict charges a flat 2% platform fee on winnings only. No subscription, no deposit fees, no hidden charges.',
+  ],
+  [
+    'How are markets resolved?',
+    'A combination of trusted oracles and decentralised verification determines outcomes, then smart contracts distribute payouts automatically within seconds.',
+  ],
+  [
+    'Can I create my own market?',
+    'Yes. Verified users can propose markets through the DAO. Approved markets go live within 24 hours and earn a share of platform fees.',
+  ],
+  [
+    'Which wallets are supported?',
+    'VeWorld is the native wallet. You can also sign in with Google or email — we create a managed VeChain wallet for you automatically.',
+  ],
 ];
 
-const ROTATE_WORDS = ['future.', 'markets.', 'outcome.', 'profits.', ' edge.'];
+// ─────────────────────────────────────────────────────────────
+// ROTATING WORDS
+// ─────────────────────────────────────────────────────────────
+
+const ROTATE_WORDS = [
+  'future.',
+  'markets.',
+  'outcome.',
+  'profits.',
+  'edge.',
+];
+
+// ─────────────────────────────────────────────────────────────
+// LEADERBOARD
+// ─────────────────────────────────────────────────────────────
 
 const LEADERBOARD = [
-  { rank: 1, name: 'CryptoSage',  avatar: 'C', markets: 142, gain: '+$14,820' },
-  { rank: 2, name: 'SportsBrain', avatar: 'S', markets: 98,  gain: '+$9,440'  },
-  { rank: 3, name: 'Velorion',    avatar: 'V', markets: 87,  gain: '+$7,110'  },
-  { rank: 4, name: 'NovaSeer',    avatar: 'N', markets: 76,  gain: '+$5,880'  },
-  { rank: 5, name: 'PulseOracle', avatar: 'P', markets: 64,  gain: '+$4,200'  },
-  { rank: 6, name: 'DeltaKnow',   avatar: 'D', markets: 58,  gain: '+$3,660'  },
-  { rank: 7, name: 'Ashkroft_X',  avatar: 'A', markets: 51,  gain: '+$2,990'  },
+  {
+    rank: 1,
+    name: 'CryptoSage',
+    avatar: 'C',
+    markets: 142,
+    gain: '+$14,820',
+  },
+  {
+    rank: 2,
+    name: 'SportsBrain',
+    avatar: 'S',
+    markets: 98,
+    gain: '+$9,440',
+  },
+  {
+    rank: 3,
+    name: 'Velorion',
+    avatar: 'V',
+    markets: 87,
+    gain: '+$7,110',
+  },
+  {
+    rank: 4,
+    name: 'NovaSeer',
+    avatar: 'N',
+    markets: 76,
+    gain: '+$5,880',
+  },
+  {
+    rank: 5,
+    name: 'PulseOracle',
+    avatar: 'P',
+    markets: 64,
+    gain: '+$4,200',
+  },
+  {
+    rank: 6,
+    name: 'DeltaKnow',
+    avatar: 'D',
+    markets: 58,
+    gain: '+$3,660',
+  },
+  {
+    rank: 7,
+    name: 'Ashkroft_X',
+    avatar: 'A',
+    markets: 51,
+    gain: '+$2,990',
+  },
 ];
+
+// ─────────────────────────────────────────────────────────────
+// TESTIMONIALS
+// ─────────────────────────────────────────────────────────────
 
 const TESTIMONIALS = [
-  { quote: 'Called the BTC breakout a full week before it happened. Walked away with 3x my stake. The UX is cleaner than anything else in this space.',                                                                                            name: 'Marcus T.',  handle: '@marcust_ve',    win: '+340%', avatar: 'M' },
-  { quote: "I've used Polymarket, Augur, Manifold. VetPredict feels different — faster, cheaper to use, and the market selection actually reflects what's happening in the world.",                                                                 name: 'Priya K.',   handle: '@priyak_chain',  win: '+218%', avatar: 'P' },
-  { quote: 'The non-custodial aspect is a deal-breaker for me — in the best way. My VET never leaves my wallet until a payout hits. That\'s how DeFi should work.',                                                                               name: 'Jake R.',    handle: '@jr_predict',    win: '+190%', avatar: 'J' },
-  { quote: 'Got into the Arsenal market at 62% YES before the match. Final score confirmed it. VET landed in seconds. No friction, no waiting, just clean resolution.',                                                                            name: 'Stella M.',  handle: '@stella_wins',   win: '+155%', avatar: 'S' },
-  { quote: 'The signal section got me. Owning your insight is exactly the right framing. Knowledge has been commoditised everywhere else — here it pays.',                                                                                         name: 'Tobias F.',  handle: '@tobias_ve',     win: '+270%', avatar: 'T' },
-  { quote: 'Built on VeChain means gas is practically free. I can make small precision bets without burning fees. That changes the entire risk calculation.',                                                                                      name: 'Aisha N.',   handle: '@aishanve',      win: '+128%', avatar: 'A' },
+  {
+    quote:
+      'Called the BTC breakout a full week before it happened. Walked away with 3x my stake. The UX is cleaner than anything else in this space.',
+    name: 'Marcus T.',
+    handle: '@marcust_ve',
+    win: '+340%',
+    avatar: 'M',
+  },
+  {
+    quote:
+      "I've used Polymarket, Augur, Manifold. VetPredict feels different — faster, cheaper to use, and the market selection actually reflects what's happening in the world.",
+    name: 'Priya K.',
+    handle: '@priyak_chain',
+    win: '+218%',
+    avatar: 'P',
+  },
+  {
+    quote:
+      "The non-custodial aspect is a deal-breaker for me — in the best way. My VET never leaves my wallet until a payout hits. That's how DeFi should work.",
+    name: 'Jake R.',
+    handle: '@jr_predict',
+    win: '+190%',
+    avatar: 'J',
+  },
+  {
+    quote:
+      'Got into the Arsenal market at 62% YES before the match. Final score confirmed it. VET landed in seconds. No friction, no waiting, just clean resolution.',
+    name: 'Stella M.',
+    handle: '@stella_wins',
+    win: '+155%',
+    avatar: 'S',
+  },
+  {
+    quote:
+      'The signal section got me. Owning your insight is exactly the right framing. Knowledge has been commoditised everywhere else — here it pays.',
+    name: 'Tobias F.',
+    handle: '@tobias_ve',
+    win: '+270%',
+    avatar: 'T',
+  },
+  {
+    quote:
+      'Built on VeChain means gas is practically free. I can make small precision bets without burning fees. That changes the entire risk calculation.',
+    name: 'Aisha N.',
+    handle: '@aishanve',
+    win: '+128%',
+    avatar: 'A',
+  },
 ];
+
+// ─────────────────────────────────────────────────────────────
+// ACTIVITY FEED
+// ─────────────────────────────────────────────────────────────
 
 const ACTIVITY_FEED = [
-  { avatar: 'J', name: 'Jake R.',    action: 'predicted', market: 'BTC above $120k',         amount: '800 VET',   time: '2s ago',  side: 'YES' },
-  { avatar: 'P', name: 'Priya K.',   action: 'predicted', market: 'Arsenal next match',       amount: '1,200 VET', time: '14s ago', side: 'YES' },
-  { avatar: 'M', name: 'Marcus T.',  action: 'won',       market: 'ETH above $5k',            amount: '+3,440 VET',time: '1m ago',  side: null  },
-  { avatar: 'S', name: 'Stella M.',  action: 'predicted', market: 'Fed rate cut Sept',         amount: '500 VET',   time: '2m ago',  side: 'YES' },
-  { avatar: 'T', name: 'Tobias F.',  action: 'predicted', market: 'GTA VI record launch',      amount: '2,000 VET', time: '3m ago',  side: 'YES' },
-  { avatar: 'A', name: 'Aisha N.',   action: 'won',       market: 'Champions League — City',   amount: '+1,920 VET',time: '5m ago',  side: null  },
-  { avatar: 'D', name: 'DeltaKnow', action: 'predicted', market: 'S&P 500 hits 6,000',        amount: '600 VET',   time: '7m ago',  side: 'NO'  },
+  {
+    avatar: 'J',
+    name: 'Jake R.',
+    action: 'predicted',
+    market: 'BTC above $120k',
+    amount: '800 VET',
+    time: '2s ago',
+    side: 'YES',
+  },
+  {
+    avatar: 'P',
+    name: 'Priya K.',
+    action: 'predicted',
+    market: 'Arsenal next match',
+    amount: '1,200 VET',
+    time: '14s ago',
+    side: 'YES',
+  },
+  {
+    avatar: 'M',
+    name: 'Marcus T.',
+    action: 'won',
+    market: 'ETH above $5k',
+    amount: '+3,440 VET',
+    time: '1m ago',
+    side: null,
+  },
+  {
+    avatar: 'S',
+    name: 'Stella M.',
+    action: 'predicted',
+    market: 'Fed rate cut Sept',
+    amount: '500 VET',
+    time: '2m ago',
+    side: 'YES',
+  },
+  {
+    avatar: 'T',
+    name: 'Tobias F.',
+    action: 'predicted',
+    market: 'GTA VI record launch',
+    amount: '2,000 VET',
+    time: '3m ago',
+    side: 'YES',
+  },
+  {
+    avatar: 'A',
+    name: 'Aisha N.',
+    action: 'won',
+    market: 'Champions League — City',
+    amount: '+1,920 VET',
+    time: '5m ago',
+    side: null,
+  },
+  {
+    avatar: 'D',
+    name: 'DeltaKnow',
+    action: 'predicted',
+    market: 'S&P 500 hits 6,000',
+    amount: '600 VET',
+    time: '7m ago',
+    side: 'NO',
+  },
 ];
 
-// ─── Arrow ────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+// ARROW
+// ─────────────────────────────────────────────────────────────
+
 const Arrow = () => <span className="arrow">↗</span>;
 
-// ─── 3D Orbit Globe ───────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+// 3D ORBIT GLOBE
+// ─────────────────────────────────────────────────────────────
+
 function OrbitGlobe() {
   return (
     <div className="vp-globe">
       <div className="metric metric-a">
         <span>Live markets</span>
-        <b>240<span>+</span></b>
+        <b>
+          240<span>+</span>
+        </b>
         <i>↑ 18% this week</i>
       </div>
+
       <div className="metric metric-b">
         <span>Markets settled</span>
-        <b>99.8<span>%</span></b>
+        <b>
+          99.8<span>%</span>
+        </b>
         <i>Verified on-chain</i>
       </div>
+
       <div className="orbit-scene">
         <div className="globe-glow" />
+
         <div className="globe-wrap">
           <div className="planet">
             <i className="land one" />
             <i className="land two" />
             <i className="land three" />
+
             <b className="pin p1" />
             <b className="pin p2" />
             <b className="pin p3" />
           </div>
         </div>
+
         <div className="orbit-ring ring-a">
           <div className="ring-el" />
-          <div className="dot-track"><span className="orbit-dot" /></div>
+          <div className="dot-track">
+            <span className="orbit-dot" />
+          </div>
         </div>
+
         <div className="orbit-ring ring-b">
           <div className="ring-el" />
-          <div className="dot-track"><span className="orbit-dot" /></div>
+          <div className="dot-track">
+            <span className="orbit-dot" />
+          </div>
         </div>
+
         <div className="orbit-ring ring-c">
           <div className="ring-el" />
-          <div className="dot-track"><span className="orbit-dot" /></div>
+          <div className="dot-track">
+            <span className="orbit-dot" />
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-// ─── Word Swap ────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
+// WORD SWAP
+// ─────────────────────────────────────────────────────────────
+
 function WordSwap() {
   const [index, setIndex] = useState(0);
   const [phase, setPhase] = useState('show');
@@ -127,32 +400,60 @@ function WordSwap() {
   useEffect(() => {
     let timer = null;
     let cancelled = false;
-    const wait = (ms) => new Promise((resolve) => { timer = setTimeout(resolve, ms); });
+
+    const wait = (ms) =>
+      new Promise((resolve) => {
+        timer = setTimeout(resolve, ms);
+      });
+
     const cycle = async () => {
       await wait(2600);
+
       if (cancelled) return;
+
       setPhase('exit');
+
       await wait(350);
+
       if (cancelled) return;
-      setIndex((c) => (c + 1) % ROTATE_WORDS.length);
+
+      setIndex((current) => (current + 1) % ROTATE_WORDS.length);
       setPhase('enter');
+
       await wait(350);
+
       if (cancelled) return;
+
       setPhase('show');
+
       cycle();
     };
+
     cycle();
-    return () => { cancelled = true; if (timer) clearTimeout(timer); };
+
+    return () => {
+      cancelled = true;
+
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
   }, []);
 
   return (
     <span className={`word-swap word-${phase}`}>
-      <span className="ws-current">{ROTATE_WORDS[index]}</span>
+      <span className="ws-current">
+        {ROTATE_WORDS[index]}
+      </span>
     </span>
   );
 }
 
-// ─── 3D Rotating Cube ─────────────────────────────────────────
+
+// ─────────────────────────────────────────────────────────────
+// 3D CUBE
+// ─────────────────────────────────────────────────────────────
+
 function Cube3D() {
   return (
     <div className="cube-stage">
@@ -160,78 +461,310 @@ function Cube3D() {
         <div className="cube-orbit-ring" />
         <div className="cube-orbit-ring" />
       </div>
-      {/* <div className="cube-float-badge">◈ 240+ Live Markets</div>
-      <div className="cube-float-badge">⚡ Instant Payouts</div>
-      <div className="cube-float-badge"> Non-Custodial</div> */}
+
       <div className="cube-3d">
+
         <div className="cube-face front">
           <span className="face-icon">◈</span>
-          <div className="face-val">240<span>+</span></div>
-          <div className="face-label">Live Markets</div>
+
+          <div className="face-val">
+            240<span>+</span>
+          </div>
+
+          <div className="face-label">
+            Live Markets
+          </div>
         </div>
+
         <div className="cube-face back">
           <span className="face-icon">⚡</span>
-          <div className="face-val">2<span>%</span></div>
-          <div className="face-label">Platform Fee</div>
+
+          <div className="face-val">
+            2<span>%</span>
+          </div>
+
+          <div className="face-label">
+            Platform Fee
+          </div>
         </div>
+
         <div className="cube-face left">
-          <span className="face-icon"></span>
-          <div className="face-val">10k<span>+</span></div>
-          <div className="face-label">Predictors</div>
+          <span className="face-icon" />
+
+          <div className="face-val">
+            10k<span>+</span>
+          </div>
+
+          <div className="face-label">
+            Predictors
+          </div>
         </div>
+
         <div className="cube-face right">
           <span className="face-icon">✦</span>
-          <div className="face-val">99<span>%</span></div>
-          <div className="face-label">Uptime</div>
+
+          <div className="face-val">
+            99<span>%</span>
+          </div>
+
+          <div className="face-label">
+            Uptime
+          </div>
         </div>
+
         <div className="cube-face top">
-          <span className="face-icon"></span>
-          <div className="face-val">2M<span>+</span></div>
-          <div className="face-label">VET Traded</div>
+          <span className="face-icon" />
+
+          <div className="face-val">
+            2M<span>+</span>
+          </div>
+
+          <div className="face-label">
+            VET Traded
+          </div>
         </div>
+
         <div className="cube-face bottom">
-          <span className="face-icon"></span>
-          <div className="face-val">0</div>
-          <div className="face-label">Exploits</div>
+          <span className="face-icon" />
+
+          <div className="face-val">
+            0
+          </div>
+
+          <div className="face-label">
+            Exploits
+          </div>
         </div>
+
       </div>
     </div>
   );
 }
+function Hero3D() {
+  const sceneRef = useRef(null);
 
-// ─── VET Flip Card ────────────────────────────────────────────
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let frame;
+
+    const handleMove = (e) => {
+      const rect = scene.getBoundingClientRect();
+
+      const x = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
+      const y = (e.clientY - (rect.top + rect.height / 2)) / rect.height;
+
+      targetX = Math.max(-1, Math.min(1, x));
+      targetY = Math.max(-1, Math.min(1, y));
+    };
+
+    const handleLeave = () => {
+      targetX = 0;
+      targetY = 0;
+    };
+
+    const animate = () => {
+      currentX += (targetX - currentX) * 0.045;
+      currentY += (targetY - currentY) * 0.045;
+
+      scene.style.setProperty('--mouse-x', `${currentX}`);
+      scene.style.setProperty('--mouse-y', `${currentY}`);
+
+      frame = requestAnimationFrame(animate);
+    };
+
+    scene.addEventListener('pointermove', handleMove);
+    scene.addEventListener('pointerleave', handleLeave);
+
+    animate();
+
+    return () => {
+      scene.removeEventListener('pointermove', handleMove);
+      scene.removeEventListener('pointerleave', handleLeave);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return (
+    <div className="hero-3d" ref={sceneRef}>
+      <div className="hero-3d-aura" />
+
+      <div className="hero-orbit orbit-one">
+        <span />
+        <span />
+      </div>
+
+      <div className="hero-orbit orbit-two">
+        <span />
+        <span />
+      </div>
+
+      <div className="hero-orbit orbit-three">
+        <span />
+      </div>
+
+      <div className="hero-particles">
+        <i />
+        <i />
+        <i />
+        <i />
+        <i />
+        <i />
+        <i />
+        <i />
+      </div>
+
+      {/* <div className="hero-core-wrap">
+        <div className="hero-core-shadow" />
+
+        <div className="hero-core">
+          <div className="core-grid" />
+
+          <div className="core-inner">
+            <span className="core-symbol">✦</span>
+            <strong>VET</strong>
+            <small>PREDICT</small>
+          </div>
+
+          <div className="core-data data-top">
+            <span>LIVE</span>
+            <b>240+</b>
+          </div>
+
+          <div className="core-data data-right">
+            <span>YES</span>
+            <b>74%</b>
+          </div>
+
+          <div className="core-data data-bottom">
+            <span>POOL</span>
+            <b>12.4K</b>
+          </div>
+
+          <div className="core-data data-left">
+            <span>VET</span>
+            <b>+2.81%</b>
+          </div>
+        </div>
+      </div> */}
+
+      {/* <div className="hero-node node-one">
+        <span>BTC</span>
+        <b>68%</b>
+      </div>
+
+      <div className="hero-node node-two">
+        <span>SPORTS</span>
+        <b>74%</b>
+      </div>
+
+      <div className="hero-node node-three">
+        <span>VET</span>
+        <b>+2.81%</b>
+      </div>
+
+      <div className="hero-node node-four">
+        <span>MARKET</span>
+        <b>LIVE</b>
+      </div> */}
+
+      <div className="hero-signal-line line-one" />
+      <div className="hero-signal-line line-two" />
+      <div className="hero-signal-line line-three" />
+    </div>
+  );
+}
+// ─────────────────────────────────────────────────────────────
+// VET CARD
+// ─────────────────────────────────────────────────────────────
+
 function VetCard() {
   return (
     <div className="vet-card-stage">
+
       <div className="vet-glow-ring" />
       <div className="vet-glow-ring" />
+
       <div className="vet-card-wrap">
+
         <div className="vet-card-face vet-card-front">
-          <div className="vc-logo">VETPREDICT</div>
-          <div className="vc-big">VET<span>.</span></div>
-          <div className="vc-ticker">VeChain Token</div>
+          <div className="vc-logo">
+            VETPREDICT
+          </div>
+
+          <div className="vc-big">
+            VET<span>.</span>
+          </div>
+
+          <div className="vc-ticker">
+            VeChain Token
+          </div>
         </div>
+
         <div className="vet-card-face vet-card-back">
+
           <div className="vc-chip" />
-          <div className="vc-price">$0.033 <span className="vc-price-change">▲ 2.81%</span></div>
-          <div className="vc-back-label">Current Market Price</div>
-          <div className="vc-back-num">2M+ VET</div>
-          <div className="vc-back-label">in active prediction pools</div>
+
+          <div className="vc-price">
+            $0.033{' '}
+            <span className="vc-price-change">
+              ▲ 2.81%
+            </span>
+          </div>
+
+          <div className="vc-back-label">
+            Current Market Price
+          </div>
+
+          <div className="vc-back-num">
+            2M+ VET
+          </div>
+
+          <div className="vc-back-label">
+            in active prediction pools
+          </div>
+
         </div>
+
       </div>
     </div>
   );
 }
 
-// ─── Auth Modal ───────────────────────────────────────────────
-function Modal({ mode, close, marketTitle }) {
-  const { loginWithEmail, signupWithEmail, loginWithWallet } = useAuth();
-  const [tab, setTab]                         = useState(mode || 'signup');
-  const [done, setDone]                       = useState(false);
-  const [loading, setLoading]                 = useState(false);
-  const [error, setError]                     = useState('');
-  const [showVeWorldRedirect, setShowVeWorldRedirect] = useState(false);
-  const [form, setForm]                       = useState({ email: '', password: '', displayName: '' });
+// ─────────────────────────────────────────────────────────────
+// AUTH MODAL
+// ─────────────────────────────────────────────────────────────
+
+function Modal({
+  mode,
+  close,
+  marketTitle,
+}) {
+  const {
+    loginWithEmail,
+    signupWithEmail,
+    loginWithWallet,
+  } = useAuth();
+
+  const [tab, setTab] = useState(mode || 'signup');
+  const [done, setDone] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [
+    showVeWorldRedirect,
+    setShowVeWorldRedirect,
+  ] = useState(false);
+
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    displayName: '',
+  });
 
   useEffect(() => {
     setTab(mode || 'signup');
@@ -241,130 +774,291 @@ function Modal({ mode, close, marketTitle }) {
   }, [mode]);
 
   useEffect(() => {
+    if (typeof document === 'undefined') return;
+
     document.body.style.overflow = mode ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [mode]);
 
   if (!mode) return null;
 
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const set = (key) => (event) => {
+    setForm((current) => ({
+      ...current,
+      [key]: event.target.value,
+    }));
+  };
 
-  const handleEmail = async (e) => {
-    if (e) e.preventDefault();
-    setError(''); setLoading(true);
+  const handleEmail = async (event) => {
+    if (event) {
+      event.preventDefault();
+    }
+
+    setError('');
+    setLoading(true);
+
     try {
-      if (tab === 'signup') await signupWithEmail(form.email, form.password, form.displayName);
-      else await loginWithEmail(form.email, form.password);
+      if (tab === 'signup') {
+        await signupWithEmail(
+          form.email,
+          form.password,
+          form.displayName
+        );
+      } else {
+        await loginWithEmail(
+          form.email,
+          form.password
+        );
+      }
+
       setDone(true);
     } catch (err) {
-      setError(err?.response?.data?.error || err?.response?.data?.errors?.[0]?.msg || err?.message || 'Something went wrong');
-    } finally { setLoading(false); }
+      setError(
+        err?.response?.data?.error ||
+          err?.response?.data?.errors?.[0]?.msg ||
+          err?.message ||
+          'Something went wrong'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleWallet = async () => {
     setError('');
-    const hasVechain = window.connex || window.vechain || window.vechain_vendor;
-    if (hasVechain) {
-      setLoading(true);
-      try { await loginWithWallet(); setDone(true); }
-      catch (err) { setError(err?.response?.data?.error || err?.message || 'Wallet connection failed.'); }
-      finally { setLoading(false); }
+
+    if (typeof window === 'undefined') {
+      setError('Wallet connection is only available in the browser.');
       return;
     }
-    if (isMobile()) setShowVeWorldRedirect(true);
-    else setError('VeWorld not detected. Install the extension from veworld.net');
+
+    const hasVechain =
+      window.connex ||
+      window.vechain ||
+      window.vechain_vendor;
+
+    if (hasVechain) {
+      setLoading(true);
+
+      try {
+        await loginWithWallet();
+        setDone(true);
+      } catch (err) {
+        setError(
+          err?.response?.data?.error ||
+            err?.message ||
+            'Wallet connection failed.'
+        );
+      } finally {
+        setLoading(false);
+      }
+
+      return;
+    }
+
+    if (isMobile()) {
+      setShowVeWorldRedirect(true);
+    } else {
+      setError(
+        'VeWorld not detected. Install the extension from veworld.net'
+      );
+    }
   };
 
   return (
-    <div className="auth-overlay" onClick={(e) => e.currentTarget === e.target && close()}>
-      <form className="auth-modal" onSubmit={handleEmail}>
-        <button type="button" className="modal-close" onClick={close}>×</button>
-        <div className="modal-logo">✦</div>
+    <div
+      className="auth-overlay"
+      onClick={(event) => {
+        if (event.currentTarget === event.target) {
+          close();
+        }
+      }}
+    >
+      <form
+        className="auth-modal"
+        onSubmit={handleEmail}
+      >
+        <button
+          type="button"
+          className="modal-close"
+          onClick={close}
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        <div className="modal-logo">
+          ✦
+        </div>
+
         {done ? (
           <>
-            <h2>You&apos;re all set!</h2>
-            <p>Your VetPredict journey starts here.</p>
-            <button type="button" className="red-btn modal-submit" onClick={close}>Explore markets </button>
+            <h2>
+              You&apos;re all set!
+            </h2>
+
+            <p>
+              Your VetPredict journey starts here.
+            </p>
+
+            <button
+              type="button"
+              className="red-btn modal-submit"
+              onClick={close}
+            >
+              Explore markets
+            </button>
           </>
         ) : (
           <>
-            <h2>{tab === 'signup' ? (marketTitle ? 'Sign Up to Predict' : 'Create your account') : 'Welcome back'}</h2>
-            <p>{marketTitle ? `Place your prediction on: "${marketTitle}"` : 'Predict smarter. Keep control of your assets.'}</p>
+            <h2>
+              {tab === 'signup'
+                ? marketTitle
+                  ? 'Sign Up to Predict'
+                  : 'Create your account'
+                : 'Welcome back'}
+            </h2>
+
+            <p>
+              {marketTitle
+                ? `Place your prediction on: "${marketTitle}"`
+                : 'Predict smarter. Keep control of your assets.'}
+            </p>
+
             <div className="auth-tabs">
-              <button type="button" className={tab === 'signup' ? 'active' : ''} onClick={() => { setTab('signup'); setError(''); setShowVeWorldRedirect(false); }}>Sign up</button>
-              <button type="button" className={tab === 'login'  ? 'active' : ''} onClick={() => { setTab('login');  setError(''); setShowVeWorldRedirect(false); }}>Log in</button>
+              <button
+                type="button"
+                className={
+                  tab === 'signup'
+                    ? 'active'
+                    : ''
+                }
+                onClick={() => {
+                  setTab('signup');
+                  setError('');
+                  setShowVeWorldRedirect(false);
+                }}
+              >
+                Sign up
+              </button>
+
+              <button
+                type="button"
+                className={
+                  tab === 'login'
+                    ? 'active'
+                    : ''
+                }
+                onClick={() => {
+                  setTab('login');
+                  setError('');
+                  setShowVeWorldRedirect(false);
+                }}
+              >
+                Log in
+              </button>
             </div>
-            {error && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 10, textAlign: 'center' }}>{error}</p>}
+
+            {error && (
+              <p
+                style={{
+                  color: '#ef4444',
+                  fontSize: 13,
+                  marginBottom: 10,
+                  textAlign: 'center',
+                }}
+              >
+                {error}
+              </p>
+            )}
+
             {showVeWorldRedirect ? (
-              <div style={{ textAlign: 'center', marginBottom: 12 }}>
-                <p style={{ fontSize: 13, marginBottom: 12 }}>Open VeWorld app to connect your wallet</p>
+              <div
+                style={{
+                  textAlign: 'center',
+                  marginBottom: 12,
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: 13,
+                    marginBottom: 12,
+                  }}
+                >
+                  Open VeWorld app to connect your wallet
+                </p>
+
                 <a
-                  href={`veworld://browser?url=${encodeURIComponent(window.location.href)}`}
+                  href={
+                    typeof window !== 'undefined'
+                      ? `veworld://browser?url=${encodeURIComponent(
+                          window.location.href
+                        )}`
+                      : '#'
+                  }
                   className="wallet-btn"
-                  style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginBottom: 10, textDecoration: 'none' }}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 8,
+                    marginBottom: 10,
+                    textDecoration: 'none',
+                  }}
                 >
                   Open in VeWorld
                 </a>
+
                 <a
-                  href={/iPhone|iPad|iPod/i.test(navigator.userAgent)
-                    ? 'https://apps.apple.com/app/veworld/id1633613910'
-                    : 'https://play.google.com/store/apps/details?id=com.vechain.wallet'}
+                  href={
+                    /iPhone|iPad|iPod/i.test(
+                      typeof navigator !== 'undefined'
+                        ? navigator.userAgent
+                        : ''
+                    )
+                      ? 'https://apps.apple.com/app/veworld/id1633613910'
+                      : 'https://play.google.com/store/apps/details?id=com.vechain.wallet'
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontSize: 12, display: 'block', marginBottom: 10 }}
+                  style={{
+                    fontSize: 12,
+                    display: 'block',
+                    marginBottom: 10,
+                  }}
                 >
                   Don&apos;t have VeWorld? Download it →
                 </a>
-                <span style={{ fontSize: 12, cursor: 'pointer', opacity: 0.6 }} onClick={() => setShowVeWorldRedirect(false)}>← Back</span>
-              </div>
-            ) : (
-              <button type="button" className="wallet-btn" onClick={handleWallet} disabled={loading}>
-                ◇ {loading ? 'Connecting...' : 'Connect VeWorld wallet'}
-              </button>
-            )}
-            {/* <button
-              type="button"
-              className="wallet-btn"
-              style={{ marginTop: 8 }}
-              onClick={() => { window.location.href = `${process.env.REACT_APP_API_URL}/auth/google`; }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" style={{ flexShrink: 0 }}>
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              Continue with Google
-            </button> */}
-            {/* <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '10px 0', opacity: 0.4, fontSize: 12 }}>
-              <span style={{ flex: 1, height: 1, background: 'currentColor' }} />
-              or with email
-              <span style={{ flex: 1, height: 1, background: 'currentColor' }} />
-            </div> */}
-            {/* {tab === 'signup' && (
-              <input placeholder="Display name" value={form.displayName} onChange={set('displayName')} required />
-            )}
-            <input type="email" placeholder="Email address" value={form.email} onChange={set('email')} onKeyDown={(e) => e.key === 'Enter' && handleEmail()} required />
-            <input type="password" placeholder={tab === 'signup' ? 'Min 8 chars, 1 uppercase, 1 number' : 'Your password'} value={form.password} onChange={set('password')} onKeyDown={(e) => e.key === 'Enter' && handleEmail()} required />
-            {tab === 'login' && (
-              <div style={{ textAlign: 'right', marginTop: -4, marginBottom: 4 }}>
+
                 <span
-                  style={{ fontSize: 12, cursor: 'pointer', opacity: 0.6 }}
-                  onClick={() => { close(); window.location.href = '/forgot-password'; }}
+                  style={{
+                    fontSize: 12,
+                    cursor: 'pointer',
+                    opacity: 0.6,
+                  }}
+                  onClick={() =>
+                    setShowVeWorldRedirect(false)
+                  }
                 >
-                  Forgot password?
+                  ← Back
                 </span>
               </div>
-            )} */}
-            {/* <button type="submit" className="red-btn modal-submit" disabled={loading}>
-              {loading ? 'Please wait...' : tab === 'signup' ? 'Create free account' : 'Log in'} {!loading && <Arrow />}
-            </button>
-            <p style={{ textAlign: 'center', fontSize: 12, marginTop: 10, opacity: 0.5 }}>
-              {tab === 'signup'
-                ? <><span>Already have an account? </span><span style={{ cursor: 'pointer', opacity: 1, textDecoration: 'underline' }} onClick={() => setTab('login')}>Log in</span></>
-                : <><span>No account? </span><span style={{ cursor: 'pointer', opacity: 1, textDecoration: 'underline' }} onClick={() => setTab('signup')}>Sign up free</span></>
-              }
-            </p> */}
+            ) : (
+              <button
+                type="button"
+                className="wallet-btn"
+                onClick={handleWallet}
+                disabled={loading}
+              >
+                ◇{' '}
+                {loading
+                  ? 'Connecting...'
+                  : 'Connect VeWorld wallet'}
+              </button>
+            )}
           </>
         )}
       </form>
@@ -372,500 +1066,1679 @@ function Modal({ mode, close, marketTitle }) {
   );
 }
 
-// ─── Market Card ──────────────────────────────────────────────
-function Card({ market, index, onPredict }) {
-  const yes = market.yesPercent ?? (market.totalPool && market.totalPool > 0
-    ? Math.round(((market.yesPool || 0) / market.totalPool) * 100)
-    : 50);
-  const poolVet     = market.totalPool ? (market.totalPool / 1e18).toFixed(0) : null;
-  const poolDisplay = poolVet && parseFloat(poolVet) > 0 ? `${poolVet} VET` : market.pool || 'New';
-  const timeLeft    = formatTimeLeft(market.closesAt) || market.timeLeft || 'Live';
+// ─────────────────────────────────────────────────────────────
+// MARKET CARD
+// ─────────────────────────────────────────────────────────────
+
+function Card({
+  market,
+  index,
+  onPredict,
+}) {
+  const safeMarket = market || {};
+
+  const category =
+    safeMarket.category || 'Other';
+
+  const title =
+    safeMarket.title ||
+    safeMarket.question ||
+    'Untitled market';
+
+  let yes = safeMarket.yesPercent;
+
+  if (
+    yes === undefined ||
+    yes === null ||
+    Number.isNaN(Number(yes))
+  ) {
+    if (
+      safeMarket.totalPool &&
+      Number(safeMarket.totalPool) > 0
+    ) {
+      yes = Math.round(
+        ((safeMarket.yesPool || 0) /
+          safeMarket.totalPool) *
+          100
+      );
+    } else {
+      yes = 50;
+    }
+  }
+
+  yes = Math.max(
+    0,
+    Math.min(100, Number(yes))
+  );
+
+  const poolVet =
+    safeMarket.totalPool
+      ? (
+          Number(safeMarket.totalPool) /
+          1e18
+        ).toFixed(0)
+      : null;
+
+  const poolDisplay =
+    poolVet && parseFloat(poolVet) > 0
+      ? `${poolVet} VET`
+      : safeMarket.pool || 'New';
+
+  const timeLeft =
+    formatTimeLeft(safeMarket.closesAt) ||
+    safeMarket.timeLeft ||
+    'Live';
+
+  const categoryClass =
+    category.toLowerCase().replace(/\s+/g, '-');
 
   return (
     <article
       className="market-card"
-      style={{ '--delay': `${index * 70}ms` }}
-      onClick={() => onPredict(market)}
+      style={{
+        '--delay': `${index * 70}ms`,
+      }}
+      onClick={() => onPredict(safeMarket)}
     >
       <div className="market-top">
-        <span className={`tag ${market.category.toLowerCase()}`}>{market.category}</span>
-        <span>◷ {timeLeft}</span>
+        <span
+          className={`tag ${categoryClass}`}
+        >
+          {category}
+        </span>
+
+        <span>
+          ◷ {timeLeft}
+        </span>
       </div>
-      <h3>{market.title}</h3>
-      <div className="odds-track"><i style={{ width: `${yes}%` }} /></div>
+
+      <h3>
+        {title}
+      </h3>
+
+      <div className="odds-track">
+        <i
+          style={{
+            width: `${yes}%`,
+          }}
+        />
+      </div>
+
       <div className="odds">
-        <b>YES <em>{yes}%</em></b>
-        <b>NO <em>{100 - yes}%</em></b>
+        <b>
+          YES <em>{yes}%</em>
+        </b>
+
+        <b>
+          NO <em>{100 - yes}%</em>
+        </b>
       </div>
+
       <div className="market-bottom">
-        <span>Pool <strong>{poolDisplay}</strong></span>
-        <button onClick={(e) => { e.stopPropagation(); onPredict(market); }}>Predict </button>
+        <span>
+          Pool{' '}
+          <strong>
+            {poolDisplay}
+          </strong>
+        </span>
+
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            onPredict(safeMarket);
+          }}
+        >
+          Predict
+        </button>
       </div>
     </article>
   );
 }
 
-// ─── Custom hook: intersection observer ──────────────────────
+// ─────────────────────────────────────────────────────────────
+// REVEAL HOOK
+// ─────────────────────────────────────────────────────────────
+
 function useReveal() {
   const [visible, setVisible] = useState(false);
   const ref = useRef(null);
+
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => setVisible(e.isIntersecting),
-      { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    const element = ref.current;
+
+    if (!element) return;
+
+    if (
+      typeof IntersectionObserver ===
+      'undefined'
+    ) {
+      setVisible(true);
+      return;
+    }
+
+    const observer =
+      new IntersectionObserver(
+        ([entry]) => {
+          setVisible(entry.isIntersecting);
+        },
+        {
+          threshold: 0.15,
+          rootMargin:
+            '0px 0px -60px 0px',
+        }
+      );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
-  return { ref, visible };
+
+  return {
+    ref,
+    visible,
+  };
 }
 
-// ─── Main Export ──────────────────────────────────────────────
-export default function Landing() {
-  const [filter, setFilter]         = useState('All');
-  const [faq, setFaq]               = useState(null);
-  const [auth, setAuth]             = useState(null);
-  const [authMarket, setAuthMarket] = useState(null);
-  const [menu, setMenu]             = useState(false);
-  const [markets, setMarkets]       = useState(STATIC_MARKETS);
-  const [loadingMarkets, setLM]     = useState(false);
-  const [email, setEmail]           = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+// ─────────────────────────────────────────────────────────────
+// MAIN LANDING PAGE
+// ─────────────────────────────────────────────────────────────
 
-  const signal   = useReveal();
+export default function Landing() {
+  const [filter, setFilter] =
+    useState('All');
+
+  const [faq, setFaq] =
+    useState(null);
+
+  const [auth, setAuth] =
+    useState(null);
+
+  const [authMarket, setAuthMarket] =
+    useState(null);
+
+  const [menu, setMenu] =
+    useState(false);
+
+  const [markets, setMarkets] =
+    useState(STATIC_MARKETS);
+
+  const [loadingMarkets, setLoadingMarkets] =
+    useState(false);
+
+  const [email, setEmail] =
+    useState('');
+
+  const [subscribed, setSubscribed] =
+    useState(false);
+
+  const signal = useReveal();
   const security = useReveal();
-  const steps    = useReveal();
+  const steps = useReveal();
+
+  // ───────────────────────────────────────────────────────────
+  // LOAD MARKETS
+  // ───────────────────────────────────────────────────────────
 
   useEffect(() => {
-    const params = { status: 'active', limit: 6 };
-    if (filter !== 'All') params.category = filter;
-    setLM(true);
+    let cancelled = false;
+
+    const params = {
+      status: 'active',
+      limit: 6,
+    };
+
+    if (filter !== 'All') {
+      params.category = filter;
+    }
+
+    setLoadingMarkets(true);
+
     fetchMarkets(params)
-      .then((res) => setMarkets(res.data?.markets || res.markets || []))
-      .catch(() => setMarkets(
-        filter === 'All'
-          ? STATIC_MARKETS
-          : STATIC_MARKETS.filter((m) => m.category === filter)
-      ))
-      .finally(() => setLM(false));
+      .then((res) => {
+        if (cancelled) return;
+
+        const data = res?.data || res || {};
+
+        const receivedMarkets =
+          data.markets ||
+          data.data?.markets ||
+          [];
+
+        if (
+          Array.isArray(receivedMarkets)
+        ) {
+          if (receivedMarkets.length > 0) {
+            setMarkets(receivedMarkets);
+          } else {
+            setMarkets(
+              filter === 'All'
+                ? STATIC_MARKETS
+                : STATIC_MARKETS.filter(
+                    (market) =>
+                      market.category === filter
+                  )
+            );
+          }
+        } else {
+          setMarkets(
+            filter === 'All'
+              ? STATIC_MARKETS
+              : STATIC_MARKETS.filter(
+                  (market) =>
+                    market.category === filter
+                )
+          );
+        }
+      })
+      .catch(() => {
+        if (cancelled) return;
+
+        setMarkets(
+          filter === 'All'
+            ? STATIC_MARKETS
+            : STATIC_MARKETS.filter(
+                (market) =>
+                  market.category === filter
+              )
+        );
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoadingMarkets(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [filter]);
 
-  const openAuth    = (tab)    => { setAuthMarket(null); setAuth(tab); };
-  const openPredict = (market) => { setAuthMarket(market); setAuth('signup'); };
-  const closeModal  = ()       => { setAuth(null); setAuthMarket(null); };
-  const signup      = ()       => { setMenu(false); setAuth('signup'); };
+  // ───────────────────────────────────────────────────────────
+  // AUTH
+  // ───────────────────────────────────────────────────────────
+
+  const openAuth = (tab) => {
+    setAuthMarket(null);
+    setAuth(tab);
+    setMenu(false);
+  };
+
+  const openPredict = (market) => {
+    setAuthMarket(market);
+    setAuth('signup');
+  };
+
+  const closeModal = () => {
+    setAuth(null);
+    setAuthMarket(null);
+  };
+
+  const signup = () => {
+    setMenu(false);
+    setAuthMarket(null);
+    setAuth('signup');
+  };
+
+  // ───────────────────────────────────────────────────────────
+  // NEWSLETTER
+  // ───────────────────────────────────────────────────────────
 
   const handleSubscribe = () => {
-    if (email.trim()) { setSubscribed(true); setEmail(''); }
+    const trimmedEmail =
+      email.trim();
+
+    if (!trimmedEmail) return;
+
+    setSubscribed(true);
+    setEmail('');
   };
+
+  // ───────────────────────────────────────────────────────────
+  // RENDER
+  // ───────────────────────────────────────────────────────────
 
   return (
     <main className="vp-site">
 
-      {/* ═══════════════ HERO ═══════════════ */}
-      <section className="hero" id="top">
+      {/* ═══════════════════════════════════════════════════════
+          HERO
+      ═══════════════════════════════════════════════════════ */}
+
+      <section
+        className="hero"
+        id="top"
+      >
         <nav>
-          <a className="brand" href="#top"><i>✦</i> VETPREDICT</a>
+          <a
+            className="brand"
+            href="#top"
+          >
+            <i>✦</i> VETPREDICT
+          </a>
+
           <div className="nav-links">
-            <a href="#markets">Markets</a>
-            <a href="#how">How it works</a>
-            <a href="#token">VET Token</a>
-            <a href="#security">Security</a>
-            <a href="#faq">FAQ</a>
+            <a href="#markets">
+              Markets
+            </a>
+
+            <a href="#how">
+              How it works
+            </a>
+
+            <a href="#token">
+              VET Token
+            </a>
+
+            <a href="#security">
+              Security
+            </a>
+
+            <a href="#faq">
+              FAQ
+            </a>
           </div>
+
           <div className="nav-actions">
-          <button className="login" onClick={() => openAuth('login')}>Log in</button>
-<button className="red-btn nav-predict-hide" onClick={signup}>Start predicting</button>
-<button className="hamburger" onClick={() => setMenu(!menu)} aria-label="Menu">
-              <i /><i /><i />
+            <button
+              type="button"
+              className="login"
+              onClick={() =>
+                openAuth('login')
+              }
+            >
+              Log in
+            </button>
+
+            <button
+              type="button"
+              className="red-btn nav-predict-hide"
+              onClick={signup}
+            >
+              Start predicting
+            </button>
+
+            <button
+              type="button"
+              className="hamburger"
+              onClick={() =>
+                setMenu((current) => !current)
+              }
+              aria-label="Menu"
+              aria-expanded={menu}
+            >
+              <i />
+              <i />
+              <i />
             </button>
           </div>
         </nav>
 
+        {/* MOBILE MENU */}
+
         {menu && (
           <div className="mobile-menu">
-            <a href="#markets"  onClick={() => setMenu(false)}>Markets</a>
-            <a href="#how"      onClick={() => setMenu(false)}>How it works</a>
-            <a href="#token"    onClick={() => setMenu(false)}>VET Token</a>
-            <a href="#security" onClick={() => setMenu(false)}>Security</a>
-            <a href="#faq"      onClick={() => setMenu(false)}>FAQ</a>
-            <button onClick={() => { openAuth('login'); setMenu(false); }}>Log in</button>
-            <button className="red-btn" onClick={signup}>Start predicting </button>
+
+            <a
+              href="#markets"
+              onClick={() =>
+                setMenu(false)
+              }
+            >
+              Markets
+            </a>
+
+            <a
+              href="#how"
+              onClick={() =>
+                setMenu(false)
+              }
+            >
+              How it works
+            </a>
+
+            <a
+              href="#token"
+              onClick={() =>
+                setMenu(false)
+              }
+            >
+              VET Token
+            </a>
+
+            <a
+              href="#security"
+              onClick={() =>
+                setMenu(false)
+              }
+            >
+              Security
+            </a>
+
+            <a
+              href="#faq"
+              onClick={() =>
+                setMenu(false)
+              }
+            >
+              FAQ
+            </a>
+
+            <button
+              type="button"
+              onClick={() =>
+                openAuth('login')
+              }
+            >
+              Log in
+            </button>
+
+            <button
+              type="button"
+              className="red-btn"
+              onClick={signup}
+            >
+              Start predicting
+            </button>
+
           </div>
         )}
 
+        {/* HERO COPY */}
+
         <div className="hero-copy">
-          <p className="eyebrow"><i /> Built on VeChain</p>
-          <h1>
-            Predict the <WordSwap />
-            <br />Earn what you know.
-          </h1>
-          <p>
-            Turn your knowledge of the world into real opportunity. Explore
-            transparent prediction markets and earn VET for being right.
+
+          <p className="eyebrow">
+            <i /> Built on VeChain
           </p>
+
+          <h1>
+            Predict the{' '}
+            <WordSwap />
+            <br />
+            Earn what you know.
+          </h1>
+
+          <p>
+            Turn your knowledge of the world
+            into real opportunity. Explore
+            transparent prediction markets and
+            earn VET for being right.
+          </p>
+
           <div className="buttons">
-            <a className="red-btn" href="#markets" onClick={(e) => { e.preventDefault(); signup(); }}>Explore markets </a>
-            <a className="ghost-btn" href="#how">How it works ↓</a>
+
+            <a
+              className="red-btn"
+              href="#markets"
+              onClick={(event) => {
+                event.preventDefault();
+                signup();
+              }}
+            >
+              Explore markets
+            </a>
+
+            <a
+              className="ghost-btn"
+              href="#how"
+            >
+              How it works ↓
+            </a>
+
           </div>
+
           <div className="proof">
-            <div className="avatars"><b>J</b><b>K</b><b>M</b><b>S</b></div>
-            <p><strong>10,000+ predictors</strong><br />already making smarter calls</p>
+
+            <div className="avatars">
+              <b>J</b>
+              <b>K</b>
+              <b>M</b>
+              <b>S</b>
+            </div>
+
+            <p>
+              <strong>
+                10,000+ predictors
+              </strong>
+              <br />
+              already making smarter calls
+            </p>
+
           </div>
+
         </div>
 
-        {/* <OrbitGlobe /> */}
-               <img
+        {/* HERO IMAGE */}
+
+        {/* <img
           src={Heroimg}
           alt="VetPredict"
           className="vp-globe hero-img"
-        />
+        /> */}
+<Hero3D />
+        {/* TICKER */}
 
         <div className="ticker">
-          <span>VET <b>$0.033</b> <i>+2.81%</i></span>
-          <span>NON-CUSTODIAL</span>
-          <span>INSTANT PAYOUTS</span>
-          <span>2% WINNING FEE</span>
+
+          <span>
+            VET <b>$0.033</b>{' '}
+            <i>+2.81%</i>
+          </span>
+
+          <span>
+            NON-CUSTODIAL
+          </span>
+
+          <span>
+            INSTANT PAYOUTS
+          </span>
+
+          <span>
+            2% WINNING FEE
+          </span>
+
         </div>
       </section>
 
-      {/* ═══════════════ LIVE MARKETS ═══════════════ */}
-      <section className="section" id="markets">
+      {/* ═══════════════════════════════════════════════════════
+          LIVE MARKETS
+      ═══════════════════════════════════════════════════════ */}
+
+      <section
+        className="section"
+        id="markets"
+      >
         <header className="section-head">
+
           <div>
-            <p className="eyebrow"><i /> Live opportunity</p>
-            <h2>Markets moving <span>right now.</span></h2>
+            <p className="eyebrow">
+              <i /> Live opportunity
+            </p>
+
+            <h2>
+              Markets moving{' '}
+              <span>
+                right now.
+              </span>
+            </h2>
           </div>
+
           <p>
-            Use what you know. Every market is transparent, measurable, and built to settle cleanly.
+            Use what you know. Every market
+            is transparent, measurable, and
+            built to settle cleanly.
           </p>
+
         </header>
 
+        {/* FILTERS */}
+
         <div className="filters">
-          {FILTERS.map((f) => (
-            <button key={f} onClick={() => setFilter(f)} className={filter === f ? 'selected' : ''}>
-              {f}
+
+          {FILTERS.map((item) => (
+            <button
+              type="button"
+              key={item}
+              onClick={() =>
+                setFilter(item)
+              }
+              className={
+                filter === item
+                  ? 'selected'
+                  : ''
+              }
+            >
+              {item}
             </button>
           ))}
+
         </div>
 
+        {/* MARKETS */}
+
         {loadingMarkets ? (
-          <div style={{ textAlign: 'center', padding: '40px 0', opacity: 0.4 }}>Loading markets...</div>
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '40px 0',
+              opacity: 0.4,
+            }}
+          >
+            Loading markets...
+          </div>
         ) : markets.length > 0 ? (
           <div className="market-grid">
-            {markets.map((m, i) => (
-              <Card key={m._id} market={m} index={i} onPredict={openPredict} />
-            ))}
+
+            {markets.map(
+              (market, index) => (
+                <Card
+                  key={
+                    market?._id ||
+                    market?.id ||
+                    `${filter}-${index}`
+                  }
+                  market={market}
+                  index={index}
+                  onPredict={openPredict}
+                />
+              )
+            )}
+
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '40px 0', opacity: 0.4 }}>
-            No markets available in this category yet.
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '40px 0',
+              opacity: 0.4,
+            }}
+          >
+            No markets available in this
+            category yet.
           </div>
         )}
 
         <div className="center">
-          <button className="ghost-btn" onClick={signup}>View all live markets <Arrow /></button>
+
+          <button
+            type="button"
+            className="ghost-btn"
+            onClick={signup}
+          >
+            View all live markets{' '}
+            <Arrow />
+          </button>
+
         </div>
       </section>
 
-      {/* ═══════════════ SIGNAL ═══════════════ */}
+      {/* ═══════════════════════════════════════════════════════
+          SIGNAL
+      ═══════════════════════════════════════════════════════ */}
+
       <section
         ref={signal.ref}
-        className={`signal-wrap${signal.visible ? ' signal-visible' : ''}`}
+        className={`signal-wrap${
+          signal.visible
+            ? ' signal-visible'
+            : ''
+        }`}
       >
         <div className="signal">
+
           <div className="signal-copy">
-            <p className="eyebrow"><i /> The signal is yours</p>
-            <h2>Know the world.<br /><span>Own your insight.</span></h2>
-            <p>VetPredict turns your informed opinions into positions with a clear, elegant experience from market to payout.</p>
-            <button className="red-btn" onClick={signup}>Start predicting </button>
+
+            <p className="eyebrow">
+              <i /> The signal is yours
+            </p>
+
+            <h2>
+              Know the world.
+              <br />
+              <span>
+                Own your insight.
+              </span>
+            </h2>
+
+            <p>
+              VetPredict turns your informed
+              opinions into positions with a
+              clear, elegant experience from
+              market to payout.
+            </p>
+
+            <button
+              type="button"
+              className="red-btn"
+              onClick={signup}
+            >
+              Start predicting
+            </button>
+
           </div>
-          <div className="signal-art">
-            <div className="signal-core"><small>VET</small><b>◈</b></div>
-            <div className="data d1">+ 74% YES</div>
-            <div className="data d2">12.4k VET pool</div>
+
+          {/* <div className="signal-art">
+
+            <div className="signal-core">
+              <small>VET</small>
+              <b>◈</b>
+            </div>
+
+            <div className="data d1">
+              + 74% YES
+            </div>
+
+            <div className="data d2">
+              12.4k VET pool
+            </div>
+
             <div className="signal-ring r1" />
             <div className="signal-ring r2" />
-          </div>
+
+          </div> */}
+
         </div>
       </section>
 
-      {/* ═══════════════ STATS CUBE ═══════════════ */}
+      {/* ═══════════════════════════════════════════════════════
+          STATS CUBE
+      ═══════════════════════════════════════════════════════ */}
+
       <section className="cube-section">
+
         <div className="cube-section-inner">
+
           <div className="cube-copy">
-            <p className="eyebrow"><i /> By the numbers</p>
-            <h2>Built to <span>scale.</span></h2>
-            <p>
-              VetPredict is growing fast. Over 10,000 active predictors have placed bets across 240+ markets,
-              with over 2 million VET settled on-chain without a single disputed payout.
+
+            <p className="eyebrow">
+              <i /> By the numbers
             </p>
+
+            <h2>
+              Built to{' '}
+              <span>
+                scale.
+              </span>
+            </h2>
+
+            <p>
+              VetPredict is growing fast. Over
+              10,000 active predictors have
+              placed bets across 240+ markets,
+              with over 2 million VET settled
+              on-chain without a single disputed
+              payout.
+            </p>
+
             <div className="stat-blocks">
+
               {[
                 ['240', '+', 'Live Markets'],
                 ['10k', '+', 'Predictors'],
-                ['2M',  '+', 'VET Settled'],
-                ['99.8','%', 'Resolution Rate'],
-              ].map(([n, s, l]) => (
-                <div className="stat-block" key={l}>
-                  <div className="stat-num">{n}<span>{s}</span></div>
-                  <div className="stat-label">{l}</div>
-                </div>
-              ))}
+                ['2M', '+', 'VET Settled'],
+                ['99.8', '%', 'Resolution Rate'],
+              ].map(
+                ([number, suffix, label]) => (
+                  <div
+                    className="stat-block"
+                    key={label}
+                  >
+                    <div className="stat-num">
+                      {number}
+                      <span>
+                        {suffix}
+                      </span>
+                    </div>
+
+                    <div className="stat-label">
+                      {label}
+                    </div>
+                  </div>
+                )
+              )}
+
             </div>
+
           </div>
+
           <Cube3D />
+
         </div>
       </section>
 
-      {/* ═══════════════ HOW IT WORKS ═══════════════ */}
-      <section className="section" id="how">
+      {/* ═══════════════════════════════════════════════════════
+          HOW IT WORKS
+      ═══════════════════════════════════════════════════════ */}
+
+      <section
+        className="section"
+        id="how"
+      >
         <header className="section-head centered">
-          <p className="eyebrow"><i /> Simple by design</p>
-          <h2>From curiosity to <span>payout.</span></h2>
+
+          <p className="eyebrow">
+            <i /> Simple by design
+          </p>
+
+          <h2>
+            From curiosity to{' '}
+            <span>
+              payout.
+            </span>
+          </h2>
+
         </header>
+
         <div
           ref={steps.ref}
-          className={`steps${steps.visible ? ' steps-visible' : ''}`}
+          className={`steps${
+            steps.visible
+              ? ' steps-visible'
+              : ''
+          }`}
         >
+
           {[
-            ['01', 'Create account', 'Sign up in under 60 seconds — email, Google, or VeWorld wallet. No KYC required for entry-level participation.'],
-            ['02', 'Fund wallet',    'Your VET stays in your wallet. Top up directly from any VeChain-compatible exchange.'],
-            ['03', 'Pick a market', 'Browse 240+ live markets across crypto, sport, politics, gaming, and more. Pick YES or NO.'],
-            ['04', 'Get paid',      'Smart contracts distribute winnings the moment the outcome is verified. Typically within seconds of settlement.'],
-          ].map(([n, t, desc], i) => (
-            <article className="step" key={n} style={{ '--step-delay': `${i * 0.18}s` }}>
-              <span>{n}</span>
-              <b>◈</b>
-              <h3>{t}</h3>
-              <p>{desc}</p>
-            </article>
-          ))}
+            [
+              '01',
+              'Create account',
+              'Sign up in under 60 seconds — email, Google, or VeWorld wallet. No KYC required for entry-level participation.',
+            ],
+            [
+              '02',
+              'Fund wallet',
+              'Your VET stays in your wallet. Top up directly from any VeChain-compatible exchange.',
+            ],
+            [
+              '03',
+              'Pick a market',
+              'Browse 240+ live markets across crypto, sport, politics, gaming, and more. Pick YES or NO.',
+            ],
+            [
+              '04',
+              'Get paid',
+              'Smart contracts distribute winnings the moment the outcome is verified. Typically within seconds of settlement.',
+            ],
+          ].map(
+            ([number, title, description], index) => (
+              <article
+                className="step"
+                key={number}
+                style={{
+                  '--step-delay': `${index * 0.18}s`,
+                }}
+              >
+                <span>
+                  {number}
+                </span>
+
+                <b>◈</b>
+
+                <h3>
+                  {title}
+                </h3>
+
+                <p>
+                  {description}
+                </p>
+              </article>
+            )
+          )}
+
         </div>
       </section>
 
-      {/* ═══════════════ LEADERBOARD ═══════════════ */}
+      {/* ═══════════════════════════════════════════════════════
+          LEADERBOARD
+      ═══════════════════════════════════════════════════════ */}
+
       <section className="leaderboard-section">
+
         <div className="leaderboard-inner">
+
           <div className="leaderboard-copy">
-            <p className="eyebrow"><i /> Top predictors</p>
-            <h2>The best <span>call it right.</span></h2>
-            <p>
-              Prediction is a skill. Our leaderboard tracks the sharpest minds across every market category.
-              Climb the ranks and earn recognition alongside your VET.
+
+            <p className="eyebrow">
+              <i /> Top predictors
             </p>
-            <button className="red-btn" onClick={signup} style={{ marginTop: 8 }}>Join the leaderboard <Arrow /></button>
+
+            <h2>
+              The best{' '}
+              <span>
+                call it right.
+              </span>
+            </h2>
+
+            <p>
+              Prediction is a skill. Our
+              leaderboard tracks the sharpest
+              minds across every market category.
+              Climb the ranks and earn recognition
+              alongside your VET.
+            </p>
+
+            <button
+              type="button"
+              className="red-btn"
+              onClick={signup}
+              style={{
+                marginTop: 8,
+              }}
+            >
+              Join the leaderboard{' '}
+              <Arrow />
+            </button>
+
           </div>
+
           <div className="lb-table">
+
             <div className="lb-header">
-              <div>#</div><div>Predictor</div><div>Markets</div><div>Gain</div>
+              <div>#</div>
+              <div>Predictor</div>
+              <div>Markets</div>
+              <div>Gain</div>
             </div>
-            {LEADERBOARD.map((u) => (
-              <div className="lb-row" key={u.rank}>
-                <div className={`lb-rank ${u.rank === 1 ? 'gold' : u.rank === 2 ? 'silver' : u.rank === 3 ? 'bronze' : ''}`}>
-                  {u.rank === 1 ? '🥇' : u.rank === 2 ? '🥈' : u.rank === 3 ? '🥉' : u.rank}
+
+            {LEADERBOARD.map((user) => (
+              <div
+                className="lb-row"
+                key={user.rank}
+              >
+                <div
+                  className={`lb-rank ${
+                    user.rank === 1
+                      ? 'gold'
+                      : user.rank === 2
+                      ? 'silver'
+                      : user.rank === 3
+                      ? 'bronze'
+                      : ''
+                  }`}
+                >
+                  {user.rank === 1
+                    ? '🥇'
+                    : user.rank === 2
+                    ? '🥈'
+                    : user.rank === 3
+                    ? '🥉'
+                    : user.rank}
                 </div>
+
                 <div className="lb-user">
-                  <div className="lb-avatar">{u.avatar}</div>
-                  <div><div className="lb-name">{u.name}</div></div>
+
+                  <div className="lb-avatar">
+                    {user.avatar}
+                  </div>
+
+                  <div>
+                    <div className="lb-name">
+                      {user.name}
+                    </div>
+                  </div>
+
                 </div>
-                <div className="lb-markets">{u.markets}</div>
-                <div className="lb-gain">{u.gain}</div>
+
+                <div className="lb-markets">
+                  {user.markets}
+                </div>
+
+                <div className="lb-gain">
+                  {user.gain}
+                </div>
               </div>
             ))}
+
           </div>
+
         </div>
       </section>
 
-      {/* ═══════════════ VET TOKEN ═══════════════ */}
-      <section className="token-section" id="token">
+      {/* ═══════════════════════════════════════════════════════
+          VET TOKEN
+      ═══════════════════════════════════════════════════════ */}
+
+      <section
+        className="token-section"
+        id="token"
+      >
         <div className="token-inner">
+
           <div className="token-copy">
-            <p className="eyebrow"><i /> The fuel of the platform</p>
-            <h2>Powered by <span>VET.</span></h2>
-            <p>
-              VeChain's native token is fast, cheap, and enterprise-grade. VET makes VetPredict
-              possible — ultra-low gas fees mean even small precision bets are worthwhile.
+
+            <p className="eyebrow">
+              <i /> The fuel of the platform
             </p>
+
+            <h2>
+              Powered by{' '}
+              <span>
+                VET.
+              </span>
+            </h2>
+
+            <p>
+              VeChain's native token is fast,
+              cheap, and enterprise-grade. VET
+              makes VetPredict possible — ultra-low
+              gas fees mean even small precision
+              bets are worthwhile.
+            </p>
+
             <div className="token-features">
+
               {[
-                ['⚡', 'Near-instant finality',   'VeChain settles in ~10 seconds. Waiting minutes for a blockchain confirmation is a thing of the past.'],
-                ['💸', 'Micro-transaction ready',  'Gas fees on VeChain cost fractions of a cent. Bet 50 VET without burning half on fees.'],
-                ['🌱', 'Sustainable chain',        'VeChain uses Proof of Authority — energy consumption is a fraction of proof-of-work chains.'],
-                ['🔐', 'Enterprise security',      'The same infrastructure trusted by Fortune 500 companies secures every prediction on VetPredict.'],
-              ].map(([icon, title, desc]) => (
-                <div className="token-feature" key={title}>
-                  <div className="tf-icon">{icon}</div>
-                  <div className="tf-text"><h4>{title}</h4><p>{desc}</p></div>
-                </div>
-              ))}
+                [
+                  '⚡',
+                  'Near-instant finality',
+                  'VeChain settles in ~10 seconds. Waiting minutes for a blockchain confirmation is a thing of the past.',
+                ],
+                [
+                  '💸',
+                  'Micro-transaction ready',
+                  'Gas fees on VeChain cost fractions of a cent. Bet 50 VET without burning half on fees.',
+                ],
+                [
+                  '🌱',
+                  'Sustainable chain',
+                  'VeChain uses Proof of Authority — energy consumption is a fraction of proof-of-work chains.',
+                ],
+                [
+                  '🔐',
+                  'Enterprise security',
+                  'The same infrastructure trusted by Fortune 500 companies secures every prediction on VetPredict.',
+                ],
+              ].map(
+                ([icon, title, description]) => (
+                  <div
+                    className="token-feature"
+                    key={title}
+                  >
+                    <div className="tf-icon">
+                      {icon}
+                    </div>
+
+                    <div className="tf-text">
+                      <h4>
+                        {title}
+                      </h4>
+
+                      <p>
+                        {description}
+                      </p>
+                    </div>
+                  </div>
+                )
+              )}
+
             </div>
+
           </div>
+
           <VetCard />
+
         </div>
       </section>
 
-      {/* ═══════════════ SECURITY ═══════════════ */}
+      {/* ═══════════════════════════════════════════════════════
+          SECURITY
+      ═══════════════════════════════════════════════════════ */}
+
       <section
         ref={security.ref}
-        className={`security${security.visible ? ' security-visible' : ''}`}
+        className={`security${
+          security.visible
+            ? ' security-visible'
+            : ''
+        }`}
         id="security"
       >
         <div className="section security-content">
+
           <div className="security-copy">
-            <p className="eyebrow"><i /> Built for trust</p>
-            <h2>Your prediction.<br /><span>Your assets.</span></h2>
-            <p>Transparent technology, no custodial shortcuts. Your information and your VET remain yours — always.</p>
-          </div>
-          <div className="security-grid">
-            {[
-              ['⌘', 'Non-custodial',     'Your VET stays in your wallet at all times. We never touch your principal.'],
-              ['◎', 'On-chain clarity',  'Every bet, every outcome, every payout is verifiable by anyone.'],
-              ['ϟ', 'Instant settlements','Correct calls are rewarded automatically within seconds of resolution.'],
-              ['✦', 'Audited contracts', 'Our smart contracts have been independently audited and are open-source.'],
-            ].map(([a, b, c], i) => (
-              <article key={b} style={{ '--security-delay': `${i * 0.16}s` }}>
-                <b>{a}</b><h3>{b}</h3><p>{c}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ═══════════════ LIVE ACTIVITY ═══════════════ */}
-      <section className="activity-section">
-        <div className="activity-inner">
-          <div className="activity-copy">
-            <p className="eyebrow"><i /> Real-time action</p>
-            <h2>10,000 predictors. <span>Live right now.</span></h2>
-            <p>
-              At any moment, thousands of VetPredict users are placing predictions, winning payouts,
-              and calling market outcomes across every category.
+            <p className="eyebrow">
+              <i /> Built for trust
             </p>
-            <button className="red-btn" onClick={signup} style={{ marginTop: 8 }}>Join them <Arrow /></button>
+
+            <h2>
+              Your prediction.
+              <br />
+              <span>
+                Your assets.
+              </span>
+            </h2>
+
+            <p>
+              Transparent technology, no
+              custodial shortcuts. Your
+              information and your VET remain
+              yours — always.
+            </p>
+
           </div>
+
+          <div className="security-grid">
+
+            {[
+              [
+                '⌘',
+                'Non-custodial',
+                'Your VET stays in your wallet at all times. We never touch your principal.',
+              ],
+              [
+                '◎',
+                'On-chain clarity',
+                'Every bet, every outcome, every payout is verifiable by anyone.',
+              ],
+              [
+                'ϟ',
+                'Instant settlements',
+                'Correct calls are rewarded automatically within seconds of resolution.',
+              ],
+              [
+                '✦',
+                'Audited contracts',
+                'Our smart contracts have been independently audited and are open-source.',
+              ],
+            ].map(
+              ([icon, title, description], index) => (
+                <article
+                  key={title}
+                  style={{
+                    '--security-delay': `${index * 0.16}s`,
+                  }}
+                >
+                  <b>
+                    {icon}
+                  </b>
+
+                  <h3>
+                    {title}
+                  </h3>
+
+                  <p>
+                    {description}
+                  </p>
+                </article>
+              )
+            )}
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════
+          LIVE ACTIVITY
+      ═══════════════════════════════════════════════════════ */}
+
+      <section className="activity-section">
+
+        <div className="activity-inner">
+
+          <div className="activity-copy">
+
+            <p className="eyebrow">
+              <i /> Real-time action
+            </p>
+
+            <h2>
+              10,000 predictors.{' '}
+              <span>
+                Live right now.
+              </span>
+            </h2>
+
+            <p>
+              At any moment, thousands of
+              VetPredict users are placing
+              predictions, winning payouts,
+              and calling market outcomes
+              across every category.
+            </p>
+
+            <button
+              type="button"
+              className="red-btn"
+              onClick={signup}
+              style={{
+                marginTop: 8,
+              }}
+            >
+              Join them{' '}
+              <Arrow />
+            </button>
+
+          </div>
+
           <div className="activity-feed">
+
             <div className="activity-feed-header">
-              <div className="live-dot">Live feed</div>
-              <div style={{ color: 'var(--soft)', fontWeight: 400 }}>Last 10 minutes</div>
+
+              <div className="live-dot">
+                Live feed
+              </div>
+
+              <div
+                style={{
+                  color: 'var(--soft)',
+                  fontWeight: 400,
+                }}
+              >
+                Last 10 minutes
+              </div>
+
             </div>
-            {ACTIVITY_FEED.map((a, i) => (
-              <div className="activity-item" key={i} style={{ animationDelay: `${i * 80}ms` }}>
-                <div className="ai-avatar">{a.avatar}</div>
-                <div className="ai-content">
-                  <div className="ai-name">{a.name}</div>
-                  <div className="ai-action">
-                    {a.action === 'won'
-                      ? <><strong style={{ color: '#22c55e' }}>won</strong> on <strong>{a.market}</strong></>
-                      : <>predicted <strong>{a.side}</strong> on <strong>{a.market}</strong></>
+
+            {ACTIVITY_FEED.map(
+              (activity, index) => (
+                <div
+                  className="activity-item"
+                  key={`${activity.name}-${index}`}
+                  style={{
+                    animationDelay: `${index * 80}ms`,
+                  }}
+                >
+
+                  <div className="ai-avatar">
+                    {activity.avatar}
+                  </div>
+
+                  <div className="ai-content">
+
+                    <div className="ai-name">
+                      {activity.name}
+                    </div>
+
+                    <div className="ai-action">
+
+                      {activity.action === 'won' ? (
+                        <>
+                          <strong
+                            style={{
+                              color: '#22c55e',
+                            }}
+                          >
+                            won
+                          </strong>{' '}
+                          on{' '}
+                          <strong>
+                            {activity.market}
+                          </strong>
+                        </>
+                      ) : (
+                        <>
+                          predicted{' '}
+                          <strong>
+                            {activity.side}
+                          </strong>{' '}
+                          on{' '}
+                          <strong>
+                            {activity.market}
+                          </strong>
+                        </>
+                      )}
+
+                    </div>
+
+                  </div>
+
+                  <div
+                    className="ai-amount"
+                    style={
+                      activity.action === 'won'
+                        ? {
+                            color: '#22c55e',
+                          }
+                        : {}
                     }
+                  >
+                    {activity.amount}
                   </div>
+
+                  <div className="ai-time">
+                    {activity.time}
+                  </div>
+
                 </div>
-                <div className="ai-amount" style={a.action === 'won' ? { color: '#22c55e' } : {}}>{a.amount}</div>
-                <div className="ai-time">{a.time}</div>
-              </div>
-            ))}
+              )
+            )}
+
           </div>
+
         </div>
       </section>
 
-      {/* ═══════════════ TESTIMONIALS ═══════════════ */}
+      {/* ═══════════════════════════════════════════════════════
+          TESTIMONIALS
+      ═══════════════════════════════════════════════════════ */}
+
       <section className="testimonials-section">
+
         <div className="testimonials-inner">
+
           <div className="testimonials-head">
-            <p className="eyebrow" style={{ justifyContent: 'center', display: 'flex' }}><i /> What predictors say</p>
-            <h2>The community <span>speaks.</span></h2>
-            <p>Over 10,000 active users. Here's what some of them are saying.</p>
+
+            <p
+              className="eyebrow"
+              style={{
+                justifyContent: 'center',
+                display: 'flex',
+              }}
+            >
+              <i /> What predictors say
+            </p>
+
+            <h2>
+              The community{' '}
+              <span>
+                speaks.
+              </span>
+            </h2>
+
+            <p>
+              Over 10,000 active users.
+              Here's what some of them are
+              saying.
+            </p>
+
           </div>
+
           <div className="tcard-grid">
-            {TESTIMONIALS.map((t) => (
-              <div className="tcard" key={t.name}>
-                <div className="tcard-win">{t.win} return</div>
-                <p className="tcard-quote" style={{ paddingLeft: 24, paddingTop: 8 }}>{t.quote}</p>
-                <div className="tcard-user">
-                  <div className="tcard-avatar">{t.avatar}</div>
-                  <div>
-                    <div className="tcard-name">{t.name}</div>
-                    <div className="tcard-handle">{t.handle}</div>
+
+            {TESTIMONIALS.map(
+              (testimonial) => (
+                <div
+                  className="tcard"
+                  key={testimonial.name}
+                >
+
+                  <div className="tcard-win">
+                    {testimonial.win} return
                   </div>
+
+                  <p
+                    className="tcard-quote"
+                    style={{
+                      paddingLeft: 24,
+                      paddingTop: 8,
+                    }}
+                  >
+                    {testimonial.quote}
+                  </p>
+
+                  <div className="tcard-user">
+
+                    <div className="tcard-avatar">
+                      {testimonial.avatar}
+                    </div>
+
+                    <div>
+
+                      <div className="tcard-name">
+                        {testimonial.name}
+                      </div>
+
+                      <div className="tcard-handle">
+                        {testimonial.handle}
+                      </div>
+
+                    </div>
+
+                  </div>
+
                 </div>
-              </div>
-            ))}
+              )
+            )}
+
           </div>
+
         </div>
       </section>
 
-      {/* ═══════════════ FAQ ═══════════════ */}
-      <section className="section faq-section" id="faq">
+      {/* ═══════════════════════════════════════════════════════
+          FAQ
+      ═══════════════════════════════════════════════════════ */}
+
+      <section
+        className="section faq-section"
+        id="faq"
+      >
         <header className="section-head centered">
-          <p className="eyebrow"><i /> Need to know</p>
-          <h2>Clear answers, <span>no noise.</span></h2>
+
+          <p className="eyebrow">
+            <i /> Need to know
+          </p>
+
+          <h2>
+            Clear answers,{' '}
+            <span>
+              no noise.
+            </span>
+          </h2>
+
         </header>
+
         <div className="faqs">
-          {FAQS.map(([q, a], i) => (
-            <article key={q}>
-              <button onClick={() => setFaq(faq === i ? null : i)}>
-                {q}<b>{faq === i ? '−' : '+'}</b>
-              </button>
-              {faq === i && <p>{a}</p>}
-            </article>
-          ))}
+
+          {FAQS.map(
+            ([question, answer], index) => (
+              <article
+                key={question}
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFaq(
+                      faq === index
+                        ? null
+                        : index
+                    )
+                  }
+                >
+                  {question}
+
+                  <b>
+                    {faq === index
+                      ? '−'
+                      : '+'}
+                  </b>
+                </button>
+
+                {faq === index && (
+                  <p>
+                    {answer}
+                  </p>
+                )}
+              </article>
+            )
+          )}
+
         </div>
       </section>
 
-      {/* ═══════════════ NEWSLETTER ═══════════════ */}
+      {/* ═══════════════════════════════════════════════════════
+          NEWSLETTER
+      ═══════════════════════════════════════════════════════ */}
+
       <section className="newsletter-section">
-        <p className="eyebrow" style={{ justifyContent: 'center', display: 'flex' }}><i /> Stay ahead</p>
-        <h2 style={{ font: '800 clamp(34px,4vw,52px)/1.1 sans-serif', letterSpacing: '-2px', marginBottom: 10 }}>
-          Get exclusive <span style={{ color: 'var(--red)' }}>market alerts</span>
-        </h2>
-        <p style={{ opacity: 0.6, marginBottom: 24, maxWidth: 400, margin: '0 auto 24px', fontSize: 14, color: 'var(--soft)' }}>
-          Be the first to know about trending markets and special events. Join 10,000+ predictors.
+
+        <p
+          className="eyebrow"
+          style={{
+            justifyContent: 'center',
+            display: 'flex',
+          }}
+        >
+          <i /> Stay ahead
         </p>
+
+        <h2
+          style={{
+            font:
+              '800 clamp(34px,4vw,52px)/1.1 sans-serif',
+            letterSpacing: '-2px',
+            marginBottom: 10,
+          }}
+        >
+          Get exclusive{' '}
+          <span
+            style={{
+              color: 'var(--red)',
+            }}
+          >
+            market alerts
+          </span>
+        </h2>
+
+        <p
+          style={{
+            opacity: 0.6,
+            margin: '0 auto 24px',
+            maxWidth: 400,
+            fontSize: 14,
+            color: 'var(--soft)',
+          }}
+        >
+          Be the first to know about trending
+          markets and special events. Join
+          10,000+ predictors.
+        </p>
+
         {subscribed ? (
-          <p style={{ color: '#22c55e', fontWeight: 600 }}>✅ You're subscribed! Check your inbox.</p>
+          <p
+            style={{
+              color: '#22c55e',
+              fontWeight: 600,
+            }}
+          >
+            ✅ You're subscribed! Check your
+            inbox.
+          </p>
         ) : (
-          <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div
+            style={{
+              display: 'flex',
+              gap: 10,
+              justifyContent: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
             <input
               type="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSubscribe()}
-              style={{ padding: '11px 16px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.07)', color: 'inherit', fontSize: 14, minWidth: 240, outline: 'none' }}
+              onChange={(event) =>
+                setEmail(event.target.value)
+              }
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  handleSubscribe();
+                }
+              }}
+              style={{
+                padding: '11px 16px',
+                borderRadius: 8,
+                border:
+                  '1px solid rgba(255,255,255,0.15)',
+                background:
+                  'rgba(255,255,255,0.07)',
+                color: 'inherit',
+                fontSize: 14,
+                minWidth: 240,
+                outline: 'none',
+              }}
             />
-            <button className="red-btn" onClick={handleSubscribe}>Subscribe →</button>
+
+            <button
+              type="button"
+              className="red-btn"
+              onClick={handleSubscribe}
+            >
+              Subscribe →
+            </button>
           </div>
         )}
+
       </section>
 
-      {/* ═══════════════ FINAL CTA ═══════════════ */}
-      <section className="final" id="start">
+      {/* ═══════════════════════════════════════════════════════
+          FINAL CTA
+      ═══════════════════════════════════════════════════════ */}
+
+      <section
+        className="final"
+        id="start"
+      >
         <div className="rings" />
-        <p className="eyebrow"><i /> Make your call</p>
-        <h2>Your knowledge has<br /><span>real value.</span></h2>
-        <p>Join VetPredict to turn the moments you follow into the outcomes you own.</p>
+
+        <p className="eyebrow">
+          <i /> Make your call
+        </p>
+
+        <h2>
+          Your knowledge has
+          <br />
+          <span>
+            real value.
+          </span>
+        </h2>
+
+        <p>
+          Join VetPredict to turn the moments
+          you follow into the outcomes you own.
+        </p>
+
         <div className="buttons">
-          <button className="red-btn" onClick={signup}>Create free account <Arrow /></button>
-          <a className="ghost-btn" href="#markets">Browse markets</a>
+
+          <button
+            type="button"
+            className="red-btn"
+            onClick={signup}
+          >
+            Create free account{' '}
+            <Arrow />
+          </button>
+
+          <a
+            className="ghost-btn"
+            href="#markets"
+          >
+            Browse markets
+          </a>
+
         </div>
       </section>
 
-      {/* ═══════════════ FOOTER ═══════════════ */}
+      {/* ═══════════════════════════════════════════════════════
+          FOOTER
+      ═══════════════════════════════════════════════════════ */}
+
       <footer>
-        <a className="brand" href="#top"><i>✦</i> VETPREDICT</a>
-        <p>Built on VeChain. Non-custodial. Transparent. © 2026</p>
+
+        <a
+          className="brand"
+          href="#top"
+        >
+          <i>✦</i> VETPREDICT
+        </a>
+
+        <p>
+          Built on VeChain. Non-custodial.
+          Transparent. © 2026
+        </p>
+
         <div>
-          <a href="#faq">Terms</a>
-          <a href="#faq">Privacy</a>
-          <a href="#faq">Support</a>
+
+          <a href="#faq">
+            Terms
+          </a>
+
+          <a href="#faq">
+            Privacy
+          </a>
+
+          <a href="#faq">
+            Support
+          </a>
+
         </div>
+
       </footer>
 
-      {/* ═══════════════ AUTH MODAL ═══════════════ */}
-      <Modal mode={auth} close={closeModal} marketTitle={authMarket?.title} />
+      {/* ═══════════════════════════════════════════════════════
+          AUTH MODAL
+      ═══════════════════════════════════════════════════════ */}
+
+      <Modal
+        mode={auth}
+        close={closeModal}
+        marketTitle={authMarket?.title}
+      />
 
     </main>
   );
