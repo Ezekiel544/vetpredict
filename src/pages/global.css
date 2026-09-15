@@ -5349,3 +5349,19 @@ nav {
     transition: none !important;
   }
 }
+@media (max-width: 768px) {
+  .hero-copy {
+    padding-bottom: 0 !important;
+  }
+
+  .hero-img {
+    margin-top: -9px !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-img {
+    margin-top: -9px !important;
+  }
+}
