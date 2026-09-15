@@ -42,7 +42,7 @@ const FAQS = [
   ['Which wallets are supported?','VeWorld is the native wallet. You can also sign in with Google or email — we create a managed VeChain wallet for you automatically.'],
 ];
 
-const ROTATE_WORDS = ['future.', 'markets.', 'outcomes.', 'profits.', 'the edge.'];
+const ROTATE_WORDS = ['future.', 'markets.', 'outcome.', 'profits.', 'the edge.'];
 
 const LEADERBOARD = [
   { rank: 1, name: 'CryptoSage',  avatar: 'C', markets: 142, gain: '+$14,820' },
