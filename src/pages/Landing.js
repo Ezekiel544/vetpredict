@@ -399,7 +399,7 @@ function Card({ market, index, onPredict }) {
       </div>
       <div className="market-bottom">
         <span>Pool <strong>{poolDisplay}</strong></span>
-        <button onClick={(e) => { e.stopPropagation(); onPredict(market); }}>Predict <Arrow /></button>
+        <button onClick={(e) => { e.stopPropagation(); onPredict(market); }}>Predict </button>
       </div>
     </article>
   );
