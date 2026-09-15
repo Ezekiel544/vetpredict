@@ -1800,7 +1800,7 @@ export default function Landing() {
 
           </div>
 
-          {/* <div className="signal-art">
+          <div className="signal-art">
 
             <div className="signal-core">
               <small>VET</small>
@@ -1818,7 +1818,7 @@ export default function Landing() {
             <div className="signal-ring r1" />
             <div className="signal-ring r2" />
 
-          </div> */}
+          </div>
 
         </div>
       </section>
