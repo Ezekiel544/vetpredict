@@ -540,142 +540,122 @@ function Cube3D() {
     </div>
   );
 }
-function Hero3D() {
+function HeroSunScene() {
   const sceneRef = useRef(null);
 
   useEffect(() => {
     const scene = sceneRef.current;
     if (!scene) return;
 
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let frame;
-
-    const handleMove = (e) => {
+    const handleMove = (event) => {
       const rect = scene.getBoundingClientRect();
 
-      const x = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
-      const y = (e.clientY - (rect.top + rect.height / 2)) / rect.height;
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
 
-      targetX = Math.max(-1, Math.min(1, x));
-      targetY = Math.max(-1, Math.min(1, y));
+      scene.style.setProperty('--mx', `${x * 2}`);
+      scene.style.setProperty('--my', `${y * 2}`);
     };
 
     const handleLeave = () => {
-      targetX = 0;
-      targetY = 0;
-    };
-
-    const animate = () => {
-      currentX += (targetX - currentX) * 0.045;
-      currentY += (targetY - currentY) * 0.045;
-
-      scene.style.setProperty('--mouse-x', `${currentX}`);
-      scene.style.setProperty('--mouse-y', `${currentY}`);
-
-      frame = requestAnimationFrame(animate);
+      scene.style.setProperty('--mx', '0');
+      scene.style.setProperty('--my', '0');
     };
 
     scene.addEventListener('pointermove', handleMove);
     scene.addEventListener('pointerleave', handleLeave);
 
-    animate();
-
     return () => {
       scene.removeEventListener('pointermove', handleMove);
       scene.removeEventListener('pointerleave', handleLeave);
-      cancelAnimationFrame(frame);
     };
   }, []);
 
   return (
-    <div className="hero-3d" ref={sceneRef}>
-      <div className="hero-3d-aura" />
+    <div className="vp-sun-scene" ref={sceneRef}>
+      <div className="vp-scene-grid" />
 
-      <div className="hero-orbit orbit-one">
-        <span />
-        <span />
+      <div className="vp-atmosphere vp-atmosphere-one" />
+      <div className="vp-atmosphere vp-atmosphere-two" />
+
+      <div className="vp-orbit vp-orbit-one" />
+      <div className="vp-orbit vp-orbit-two" />
+      <div className="vp-orbit vp-orbit-three" />
+
+      <div className="vp-stars">
+        {Array.from({ length: 26 }).map((_, index) => (
+          <span
+            key={index}
+            className={`vp-star vp-star-${index + 1}`}
+          />
+        ))}
       </div>
 
-      <div className="hero-orbit orbit-two">
-        <span />
-        <span />
-      </div>
+      <div className="vp-sun-system">
+        <div className="vp-sun-halo vp-sun-halo-outer" />
+        <div className="vp-sun-halo vp-sun-halo-middle" />
+        <div className="vp-sun-halo vp-sun-halo-inner" />
 
-      <div className="hero-orbit orbit-three">
-        <span />
-      </div>
-
-      <div className="hero-particles">
-        <i />
-        <i />
-        <i />
-        <i />
-        <i />
-        <i />
-        <i />
-        <i />
-      </div>
-
-      {/* <div className="hero-core-wrap">
-        <div className="hero-core-shadow" />
-
-        <div className="hero-core">
-          <div className="core-grid" />
-
-          <div className="core-inner">
-            <span className="core-symbol">✦</span>
-            <strong>VET</strong>
-            <small>PREDICT</small>
-          </div>
-
-          <div className="core-data data-top">
-            <span>LIVE</span>
-            <b>240+</b>
-          </div>
-
-          <div className="core-data data-right">
-            <span>YES</span>
-            <b>74%</b>
-          </div>
-
-          <div className="core-data data-bottom">
-            <span>POOL</span>
-            <b>12.4K</b>
-          </div>
-
-          <div className="core-data data-left">
-            <span>VET</span>
-            <b>+2.81%</b>
-          </div>
+        <div className="vp-sun">
+          <div className="vp-sun-surface" />
+          <div className="vp-sun-highlight" />
+          <div className="vp-sun-shadow" />
         </div>
-      </div> */}
 
-      {/* <div className="hero-node node-one">
-        <span>BTC</span>
-        <b>68%</b>
+        <div className="vp-sun-ring vp-sun-ring-one" />
+        <div className="vp-sun-ring vp-sun-ring-two" />
       </div>
 
-      <div className="hero-node node-two">
-        <span>SPORTS</span>
-        <b>74%</b>
+      {/* Back clouds */}
+      <div className="vp-cloud-cloudset vp-cloud-back">
+        <div className="vp-cloud c1" />
+        <div className="vp-cloud c2" />
+        <div className="vp-cloud c3" />
+        <div className="vp-cloud c4" />
+        <div className="vp-cloud c5" />
       </div>
 
-      <div className="hero-node node-three">
+      {/* Main cloud layer */}
+      <div className="vp-cloud-cloudset vp-cloud-main">
+        <div className="vp-cloud c1" />
+        <div className="vp-cloud c2" />
+        <div className="vp-cloud c3" />
+        <div className="vp-cloud c4" />
+        <div className="vp-cloud c5" />
+        <div className="vp-cloud c6" />
+        <div className="vp-cloud c7" />
+      </div>
+
+      {/* Foreground clouds */}
+      <div className="vp-cloud-cloudset vp-cloud-front">
+        <div className="vp-cloud c1" />
+        <div className="vp-cloud c2" />
+        <div className="vp-cloud c3" />
+        <div className="vp-cloud c4" />
+        <div className="vp-cloud c5" />
+        <div className="vp-cloud c6" />
+      </div>
+
+      <div className="vp-light-beam vp-beam-one" />
+      <div className="vp-light-beam vp-beam-two" />
+
+      <div className="vp-floating-data vp-data-one">
+        <span className="vp-data-dot" />
+        <span>LIVE MARKET</span>
+      </div>
+
+      <div className="vp-floating-data vp-data-two">
         <span>VET</span>
-        <b>+2.81%</b>
+        <strong>+2.81%</strong>
       </div>
 
-      <div className="hero-node node-four">
-        <span>MARKET</span>
-        <b>LIVE</b>
-      </div> */}
+      <div className="vp-floating-data vp-data-three">
+        <span className="vp-data-dot" />
+        <span>ON-CHAIN</span>
+      </div>
 
-      <div className="hero-signal-line line-one" />
-      <div className="hero-signal-line line-two" />
-      <div className="hero-signal-line line-three" />
+      <div className="vp-scan-line" />
+      <div className="vp-ground-glow" />
     </div>
   );
 }
@@ -1407,241 +1387,177 @@ export default function Landing() {
           HERO
       ═══════════════════════════════════════════════════════ */}
 
-      <section
-        className="hero"
-        id="top"
+    <section className="hero vp-hero" id="top">
+  <div className="vp-hero-noise" />
+
+  <nav className="vp-nav">
+    <a href="#top" className="logo">
+      Vet<span>Predict</span>
+    </a>
+
+    <div className="nav-links">
+      <a href="#markets">Markets</a>
+      <a href="#how">How it works</a>
+      <a href="#signals">Signals</a>
+      <a href="#activity">Activity</a>
+    </div>
+
+    <div className="nav-actions">
+      <a href="#markets" className="nav-predict-hide">
+        Start predicting
+      </a>
+
+      <button
+        className="hamburger"
+        type="button"
+        aria-label="Open menu"
+        onClick={() => setMenu((value) => !value)}
       >
-        <nav>
-          <a
-            className="brand"
-            href="#top"
-          >
-            <i>✦</i> VETPREDICT
-          </a>
+        <span />
+        <span />
+        <span />
+      </button>
+    </div>
+  </nav>
 
-          <div className="nav-links">
-            <a href="#markets">
-              Markets
-            </a>
+  {menu && (
+    <div className="mobile-menu">
+      <a href="#markets" onClick={() => setMenu(false)}>
+        Markets
+      </a>
 
-            <a href="#how">
-              How it works
-            </a>
+      <a href="#how" onClick={() => setMenu(false)}>
+        How it works
+      </a>
 
-            <a href="#token">
-              VET Token
-            </a>
+      <a href="#signals" onClick={() => setMenu(false)}>
+        Signals
+      </a>
 
-            <a href="#security">
-              Security
-            </a>
+      <a href="#activity" onClick={() => setMenu(false)}>
+        Activity
+      </a>
 
-            <a href="#faq">
-              FAQ
-            </a>
-          </div>
+      <a
+        href="#markets"
+        className="mobile-menu-cta"
+        onClick={(event) => {
+          event.preventDefault();
+          setMenu(false);
+          signup();
+        }}
+      >
+        Start predicting
+      </a>
+    </div>
+  )}
 
-          <div className="nav-actions">
-            <button
-              type="button"
-              className="login"
-              onClick={() =>
-                openAuth('login')
-              }
-            >
-              Log in
-            </button>
+  <div className="vp-hero-layout">
 
-            <button
-              type="button"
-              className="red-btn nav-predict-hide"
-              onClick={signup}
-            >
-              Start predicting
-            </button>
+    {/* LEFT CONTENT */}
+    <div className="hero-copy vp-hero-copy">
 
-            <button
-              type="button"
-              className="hamburger"
-              onClick={() =>
-                setMenu((current) => !current)
-              }
-              aria-label="Menu"
-              aria-expanded={menu}
-            >
-              <i />
-              <i />
-              <i />
-            </button>
-          </div>
-        </nav>
+      <div className="vp-status">
+        <span className="vp-status-pulse" />
+        Built on VeChain
+      </div>
 
-        {/* MOBILE MENU */}
+      <h1>
+        Predict Onchain
+        <span className="vp-title-gradient">
+          <WordSwap />
+        </span>
+        <br />
+        <span className="vp-title-white">
+          Earn what you know.
+        </span>
+      </h1>
 
-        {menu && (
-          <div className="mobile-menu">
+      <p className="vp-hero-description">
+        Turn your knowledge into an edge.
+        Predict real-world outcomes, compete with
+        other predictors and earn VET when your
+        calls are right.
+      </p>
 
-            <a
-              href="#markets"
-              onClick={() =>
-                setMenu(false)
-              }
-            >
-              Markets
-            </a>
+      <div className="buttons vp-hero-buttons">
+        <a
+          className="red-btn vp-primary-btn"
+          href="#markets"
+          onClick={(event) => {
+            event.preventDefault();
+            signup();
+          }}
+        >
+          Explore markets
+          <span>↗</span>
+        </a>
 
-            <a
-              href="#how"
-              onClick={() =>
-                setMenu(false)
-              }
-            >
-              How it works
-            </a>
+        <a className="ghost-btn vp-secondary-btn" href="#how">
+          How it works
+          <span>↓</span>
+        </a>
+      </div>
 
-            <a
-              href="#token"
-              onClick={() =>
-                setMenu(false)
-              }
-            >
-              VET Token
-            </a>
-
-            <a
-              href="#security"
-              onClick={() =>
-                setMenu(false)
-              }
-            >
-              Security
-            </a>
-
-            <a
-              href="#faq"
-              onClick={() =>
-                setMenu(false)
-              }
-            >
-              FAQ
-            </a>
-
-            <button
-              type="button"
-              onClick={() =>
-                openAuth('login')
-              }
-            >
-              Log in
-            </button>
-
-            <button
-              type="button"
-              className="red-btn"
-              onClick={signup}
-            >
-              Start predicting
-            </button>
-
-          </div>
-        )}
-
-        {/* HERO COPY */}
-
-        <div className="hero-copy">
-
-          <p className="eyebrow">
-            <i /> Built on VeChain
-          </p>
-
-          <h1>
-            Predict the{' '}
-            <WordSwap />
-            <br />
-            Earn what you know.
-          </h1>
-
-          <p>
-            Turn your knowledge of the world
-            into real opportunity. Explore
-            transparent prediction markets and
-            earn VET for being right.
-          </p>
-
-          <div className="buttons">
-
-            <a
-              className="red-btn"
-              href="#markets"
-              onClick={(event) => {
-                event.preventDefault();
-                signup();
-              }}
-            >
-              Explore markets
-            </a>
-
-            <a
-              className="ghost-btn"
-              href="#how"
-            >
-              How it works ↓
-            </a>
-
-          </div>
-
-          <div className="proof">
-
-            <div className="avatars">
-              <b>J</b>
-              <b>K</b>
-              <b>M</b>
-              <b>S</b>
-            </div>
-
-            <p>
-              <strong>
-                10,000+ predictors
-              </strong>
-              <br />
-              already making smarter calls
-            </p>
-
-          </div>
-
+      <div className="proof vp-proof">
+        <div className="avatars">
+          <b>J</b>
+          <b>K</b>
+          <b>M</b>
+          <b>S</b>
         </div>
 
-        {/* HERO IMAGE */}
+        <p>
+          <strong>10,000+ predictors</strong>
+          <br />
+          already making smarter calls
+        </p>
+      </div>
+    </div>
 
-        {/* <img
-          src={Heroimg}
-          alt="VetPredict"
-          className="vp-globe hero-img"
-        /> */}
-<Hero3D />
-        {/* TICKER */}
+    {/* 3D VISUAL */}
+    <div className="vp-hero-visual">
+      <HeroSunScene />
 
-        <div className="ticker">
+      <div className="vp-visual-label vp-label-top">
+        <span>01</span>
+        MARKET SIGNAL
+      </div>
 
-          <span>
-            VET <b>$0.033</b>{' '}
-            <i>+2.81%</i>
-          </span>
+      <div className="vp-visual-label vp-label-bottom">
+        <span>VECHAIN</span>
+        <b>DECENTRALIZED</b>
+      </div>
+    </div>
 
-          <span>
-            NON-CUSTODIAL
-          </span>
+  </div>
 
-          <span>
-            INSTANT PAYOUTS
-          </span>
+  <div className="ticker vp-ticker">
+    <span>
+      VET <b>$0.033</b> <i>+2.81%</i>
+    </span>
 
-          <span>
-            2% WINNING FEE
-          </span>
+    <span>
+      <small />
+      NON-CUSTODIAL
+    </span>
 
-        </div>
-      </section>
+    <span>
+      <small />
+      INSTANT PAYOUTS
+    </span>
+
+    <span>
+      <small />
+      2% WINNING FEE
+    </span>
+
+    <span>
+      <small />
+      BUILT ON VECHAIN
+    </span>
+  </div>
+</section>
 
       {/* ═══════════════════════════════════════════════════════
           LIVE MARKETS
