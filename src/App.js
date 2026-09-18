@@ -17,7 +17,7 @@ export default function App() {
         height:"100vh", background:"#F4F6FA",
         fontFamily:"'Plus Jakarta Sans',sans-serif", fontSize:14, color:"#6B7280"
       }}>
-        Loading PredictChain...
+        Loading Pooz...
       </div>
     );
   }
@@ -41,7 +41,7 @@ export default function App() {
         style={{background:"#0BAB64",color:"#fff",border:"none",borderRadius:10,
           padding:"11px 24px",fontSize:14,fontWeight:700,cursor:"pointer"}}
       >
-        Back to PredictChain →
+        Back to Pooz →
       </button>
     </div>
   );

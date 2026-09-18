@@ -753,7 +753,7 @@ function MarketsPage({searchQuery="", user}) {
   };
 
   const handleTwitter = (m) => {
-    const text = encodeURIComponent(`Will it happen? Predict on PredictChain 🔮\n\n"${m.title}"\n\nYES ${yesPercent(m)}% · NO ${100-yesPercent(m)}%`);
+    const text = encodeURIComponent(`Will it happen? Predict on Pooz 🔮\n\n"${m.title}"\n\nYES ${yesPercent(m)}% · NO ${100-yesPercent(m)}%`);
     const url  = encodeURIComponent(`${window.location.origin}/?market=${m._id}`);
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank");
   };
@@ -897,7 +897,7 @@ function LeaderboardPage({user}) {
     <div className="pg">
       <div style={{marginBottom:18}}>
         <div style={{fontFamily:"var(--fh)",fontSize:22,fontWeight:800,color:"var(--text)",marginBottom:4}}>Leaderboard</div>
-        <div style={{fontSize:13,color:"var(--text2)"}}>Top predictors on PredictChain</div>
+        <div style={{fontSize:13,color:"var(--text2)"}}>Top predictors on Pooz</div>
       </div>
       <div className="my-rank-bar">
         <div>
@@ -1106,7 +1106,7 @@ function ProfilePage({user}) {
                 <span onClick={copy} style={{cursor:"pointer",flexShrink:0}}>{copied?"Copied":"Copy"}</span>
               </div>
             )}
-            <div style={{fontSize:12,color:"var(--text2)",marginBottom:8}}>{user.bio||"PredictChain user"}</div>
+            <div style={{fontSize:12,color:"var(--text2)",marginBottom:8}}>{user.bio||"Pooz user"}</div>
             <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
               {user.correctPredictions>0&&<span className="pill pill-g">🎯 First Win</span>}
               {user.winStreak>=3&&<span className="pill pill-a">🔥 {user.winStreak} Streak</span>}
@@ -1180,8 +1180,8 @@ function SupportPage() {
   const faqs = [
     {q:"How do predictions work?",a:"You stake VET on the outcome of a market. If correct, you win a share of the total pool proportional to your stake."},
     {q:"How are markets resolved?",a:"Markets are resolved by the admin manually based on real-world outcomes. Results are recorded on the VeChain blockchain."},
-    {q:"Is my VET safe?",a:"All funds are held in smart contracts on VeChain — fully non-custodial. PredictChain never holds your assets directly."},
-    {q:"What are the fees?",a:"PredictChain charges a 1.5% platform fee on winning payouts only. No fees for deposits, withdrawals, or losing predictions."},
+    {q:"Is my VET safe?",a:"All funds are held in smart contracts on VeChain — fully non-custodial. Pooz never holds your assets directly."},
+    {q:"What are the fees?",a:"Pooz charges a 1.5% platform fee on winning payouts only. No fees for deposits, withdrawals, or losing predictions."},
     {q:"How do I withdraw?",a:"Go to the Wallet page and tap Withdraw. Funds arrive in your connected wallet within 1–3 minutes on VeChain."},
   ];
   return (
@@ -1191,7 +1191,7 @@ function SupportPage() {
         <div style={{fontSize:13,color:"var(--text2)"}}>Find answers, get help, contact the team</div>
       </div>
       <div className="sup-grid">
-        {[{ico:"💬",bg:"var(--gbg)",title:"Live Chat",desc:"Available 9am-6pm UTC Mon-Fri"},{ico:"📧",bg:"var(--bbg)",title:"Email Support",desc:"support@predictchain.io"},{ico:"🐦",bg:"var(--vbg)",title:"Twitter / X",desc:"@PredictChain"},{ico:"💬",bg:"var(--pbg)",title:"Discord",desc:"Join our community"}].map(c=>(
+        {[{ico:"💬",bg:"var(--gbg)",title:"Live Chat",desc:"Available 9am-6pm UTC Mon-Fri"},{ico:"📧",bg:"var(--bbg)",title:"Email Support",desc:"support@pooz.io"},{ico:"🐦",bg:"var(--vbg)",title:"Twitter / X",desc:"@Pooz"},{ico:"💬",bg:"var(--pbg)",title:"Discord",desc:"Join our community"}].map(c=>(
           <div className="sup-card" key={c.title}>
             <div className="sup-ico" style={{background:c.bg}}>{c.ico}</div>
             <div>
@@ -1297,7 +1297,7 @@ function Sidebar({active,setActive,open,setOpen,theme,setTheme,user,onSignOut}) 
     <>
       <div className={`sbo${open?" open":""}`} onClick={()=>setOpen(false)}/>
       <aside className={`sb${open?" open":""}`}>
-        <div className="sb-logo" onClick={()=>go("dashboard")}>Vetpredict</div>
+        <div className="sb-logo" onClick={()=>go("dashboard")}>Pooz</div>
         <nav className="sb-nav">
           <div className="nlbl">Main</div>
           {nav.map(n=>(

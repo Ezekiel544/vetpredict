@@ -85,7 +85,7 @@ const signTx = async (clauses, comment) => {
 export const getWalletAddress = async () => {
   const result = await signCert({
     purpose: "identification",
-    payload: { type: "text", content: "Connect to PredictChain" },
+    payload: { type: "text", content: "Connect to Pooz" },
   });
   return result.annex.signer.toLowerCase();
 };

@@ -968,7 +968,7 @@ export default function AdminPanel() {
       <aside className="adm-sb">
         <div className="adm-logo">
           <span style={{width:28,height:28,borderRadius:7,background:"var(--red)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,color:"#fff",fontWeight:800,flexShrink:0}}>P</span>
-          PredictChain
+          Pooz
           <span className="adm-badge">Admin</span>
         </div>
         <nav className="adm-nav">

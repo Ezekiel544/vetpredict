@@ -102,16 +102,16 @@ const FILTERS = [
 
 const FAQS = [
   [
-    'What is VetPredict?',
-    'VetPredict is a decentralised prediction market built on VeChain. Predict real-world outcomes and earn VET when you are right.',
+    'What is Pooz?',
+    'Pooz is a decentralised prediction market built on VeChain. Predict real-world outcomes and earn VET when you are right.',
   ],
   [
     'Are my funds safe?',
-    'VetPredict is non-custodial: your funds stay in your wallet and every transaction is transparent on-chain. We never hold your assets.',
+    'Pooz is non-custodial: your funds stay in your wallet and every transaction is transparent on-chain. We never hold your assets.',
   ],
   [
     'What are the fees?',
-    'VetPredict charges a flat 2% platform fee on winnings only. No subscription, no deposit fees, no hidden charges.',
+    'Pooz charges a flat 1.5% platform fee on winnings only. No subscription, no deposit fees, no hidden charges.',
   ],
   [
     'How are markets resolved?',
@@ -210,7 +210,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      "I've used Polymarket, Augur, Manifold. VetPredict feels different — faster, cheaper to use, and the market selection actually reflects what's happening in the world.",
+      "I've used Polymarket, Augur, Manifold. Pooz feels different — faster, cheaper to use, and the market selection actually reflects what's happening in the world.",
     name: 'Priya K.',
     handle: '@priyak_chain',
     win: '+218%',
@@ -480,7 +480,7 @@ function Cube3D() {
           <span className="face-icon">⚡</span>
 
           <div className="face-val">
-            2<span>%</span>
+            1.5<span>%</span>
           </div>
 
           <div className="face-label">
@@ -674,7 +674,7 @@ function VetCard() {
 
         <div className="vet-card-face vet-card-front">
           <div className="vc-logo">
-            VETPREDICT
+            POOZ
           </div>
 
           <div className="vc-big">
@@ -881,7 +881,7 @@ function Modal({
             </h2>
 
             <p>
-              Your VetPredict journey starts here.
+              Your Pooz journey starts here.
             </p>
 
             <button
@@ -1392,7 +1392,7 @@ export default function Landing() {
 
   <nav className="vp-nav">
     <a href="#top" className="logo">
-      Vet<span>Predict</span>
+      Po<span>oz</span>
     </a>
 
     <div className="nav-links">
@@ -1549,7 +1549,7 @@ export default function Landing() {
 
     <span>
       <small />
-      2% WINNING FEE
+      1.5% WINNING FEE
     </span>
 
     <span>
@@ -1700,7 +1700,7 @@ export default function Landing() {
             </h2>
 
             <p>
-              VetPredict turns your informed
+              Pooz turns your informed
               opinions into positions with a
               clear, elegant experience from
               market to payout.
@@ -1761,7 +1761,7 @@ export default function Landing() {
             </h2>
 
             <p>
-              VetPredict is growing fast. Over
+              Pooz is growing fast. Over
               10,000 active predictors have
               placed bets across 240+ markets,
               with over 2 million VET settled
@@ -2019,7 +2019,7 @@ export default function Landing() {
             <p>
               VeChain's native token is fast,
               cheap, and enterprise-grade. VET
-              makes VetPredict possible — ultra-low
+              makes Pooz possible — ultra-low
               gas fees mean even small precision
               bets are worthwhile.
             </p>
@@ -2045,7 +2045,7 @@ export default function Landing() {
                 [
                   '🔐',
                   'Enterprise security',
-                  'The same infrastructure trusted by Fortune 500 companies secures every prediction on VetPredict.',
+                  'The same infrastructure trusted by Fortune 500 companies secures every prediction on Pooz.',
                 ],
               ].map(
                 ([icon, title, description]) => (
@@ -2191,7 +2191,7 @@ export default function Landing() {
 
             <p>
               At any moment, thousands of
-              VetPredict users are placing
+              Pooz users are placing
               predictions, winning payouts,
               and calling market outcomes
               across every category.
@@ -2585,7 +2585,7 @@ export default function Landing() {
         </h2>
 
         <p>
-          Join VetPredict to turn the moments
+          Join Pooz to turn the moments
           you follow into the outcomes you own.
         </p>
 
@@ -2620,7 +2620,7 @@ export default function Landing() {
           className="brand"
           href="#top"
         >
-          <i>✦</i> VETPREDICT
+          <i>✦</i> POOZ
         </a>
 
         <p>
