@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useMarkets, useMyPredictions, useWallet, useLeaderboard, useNotifications } from "../hooks/useData";
 import { placePrediction, markNotifsRead, changePassword } from "../services/api";
 import { hasConnex, placePredictionOnChain, waitForTx, claimWinningsOnChain } from "../services/vechain";
+import Poozimg from './pooz_logo.png';
 
 const injectStyles = (theme) => {
   const id = "pc-styles";
@@ -1297,7 +1298,7 @@ function Sidebar({active,setActive,open,setOpen,theme,setTheme,user,onSignOut}) 
     <>
       <div className={`sbo${open?" open":""}`} onClick={()=>setOpen(false)}/>
       <aside className={`sb${open?" open":""}`}>
-        <div className="sb-logo" onClick={()=>go("dashboard")}>Pooz</div>
+        <div className="sb-logo" onClick={()=>go("dashboard")}>  <img src={Poozimg} alt="Pooz" width="130" height="130"/></div>
         <nav className="sb-nav">
           <div className="nlbl">Main</div>
           {nav.map(n=>(

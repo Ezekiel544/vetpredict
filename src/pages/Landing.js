@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { fetchMarkets } from '../services/api';
 import Heroimg from './heroimg.png';
 import './global.css';
-
+import Poozimg from './pooz_logo.png';
 // ─────────────────────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────────────────────
@@ -1392,7 +1392,8 @@ export default function Landing() {
 
   <nav className="vp-nav">
     <a href="#top" className="logo">
-      Po<span>oz</span>
+      {/* Po<span>oz</span> */}
+      <img src={Poozimg} alt="Pooz" width="130" height="130"/>
     </a>
 
     <div className="nav-links">
@@ -2620,7 +2621,8 @@ export default function Landing() {
           className="brand"
           href="#top"
         >
-          <i>✦</i> POOZ
+          {/* <i>✦</i> POOZ */}
+         < img src={Poozimg} alt="Pooz" width="130" height="130"/> 
         </a>
 
         <p>
