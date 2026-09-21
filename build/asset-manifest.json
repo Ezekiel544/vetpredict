@@ -1,14 +1,15 @@
 {
   "files": {
     "main.css": "/static/css/main.be160420.css",
-    "main.js": "/static/js/main.1dc55f7a.js",
+    "main.js": "/static/js/main.6e0f0100.js",
     "static/media/heroimg.png": "/static/media/heroimg.c97a4d790ad112dd5b79.png",
+    "static/media/pooz_logo.png": "/static/media/pooz_logo.99b6f89def17528cdfb3.png",
     "index.html": "/index.html",
     "main.be160420.css.map": "/static/css/main.be160420.css.map",
-    "main.1dc55f7a.js.map": "/static/js/main.1dc55f7a.js.map"
+    "main.6e0f0100.js.map": "/static/js/main.6e0f0100.js.map"
   },
   "entrypoints": [
     "static/css/main.be160420.css",
-    "static/js/main.1dc55f7a.js"
+    "static/js/main.6e0f0100.js"
   ]
 }

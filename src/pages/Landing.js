@@ -2644,6 +2644,14 @@ export default function Landing() {
             Support
           </a>
 
+          <a
+            href="/Pooz_Technical_Documentation.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Docs
+          </a>
+
         </div>
 
       </footer>
