@@ -3,6 +3,7 @@ import { connectorsForWallets } from "@rainbow-me/rainbowkit";
 import {
   coinbaseWallet,
   injectedWallet,
+  metaMaskWallet,
   rainbowWallet,
   walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets";
@@ -31,8 +32,9 @@ const walletList = [
     groupName: "Popular",
     wallets: [
       veWorldWallet,
-      rainbowWallet,
+      metaMaskWallet,
       injectedWallet,
+      rainbowWallet,
       coinbaseWallet,
     ],
   },

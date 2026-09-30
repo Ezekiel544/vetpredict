@@ -36,5 +36,12 @@
     "postcss": "^8.5.9",
     "react-app-rewired": "^2.2.1",
     "tailwindcss": "^4.2.2"
+  },
+  "overrides": {
+    "@rainbow-me/rainbowkit": {
+      "cuer": {
+        "qr": "0.5.5"
+      }
+    }
   }
 }

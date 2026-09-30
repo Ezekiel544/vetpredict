@@ -1,0 +1,2 @@
+"use strict";(globalThis.webpackChunkpooz_frontend=globalThis.webpackChunkpooz_frontend||[]).push([[4353],{64353(e,n,s){s.d(n,{A:()=>t});const t={getItem:async()=>null,setItem:async()=>{},removeItem:async()=>{},clear:async()=>{},getAllKeys:async()=>[]}}}]);
+//# sourceMappingURL=4353.8e471ad5.chunk.js.map
