@@ -174,16 +174,16 @@ const injectAdminStyles = () => {
 // ─── Helpers ─────────────────────────────────────────────────
 const fmt     = (n) => Number(n || 0).toLocaleString();
 const fmtDate = (d) => d ? new Date(d).toLocaleString() : "—";
-// const fmtVet  = (n) => `${fmt(Math.round(n || 0))} VET`;
+// const fmtVet  = (n) => `${fmt(Math.round(n || 0))} POOZ`;
 // Replace the existing fmtVet with this:
 const fmtVet = (n) => {
   const val = Number(n || 0);
-  if (val === 0) return "0 VET";
+  if (val === 0) return "0 POOZ";
   // Show up to 4 decimal places, strip trailing zeros
   return `${parseFloat(val.toFixed(4)).toLocaleString(undefined, {
     minimumFractionDigits: 0,
     maximumFractionDigits: 4,
-  })} VET`;
+  })} POOZ`;
 };
 const truncAddr = (a) => a ? `${a.slice(0,6)}...${a.slice(-4)}` : "—";
 const StatusPill = ({ status }) => {
@@ -298,7 +298,7 @@ function OverviewPage() {
       await waitForTx(txHash);
       await adminWithdrawFees({ toAddress, amountVet: currentFees, txHash });
       setStats(s => ({ ...s, feesCollectedVet: 0 }));
-      setWithMsg({ text:`Withdrew ${currentFees} VET successfully.`, ok:true });
+      setWithMsg({ text:`Withdrew ${currentFees} POOZ successfully.`, ok:true });
       setTimeout(() => { setWithMsg({ text:"", ok:false }); load(); }, 4000);
     } catch (e) {
       setWithMsg({ text: e.message || "Withdrawal failed", ok:false });
@@ -313,8 +313,8 @@ function OverviewPage() {
     { ico:"👤", bg:"var(--bbg)", val:fmt(stats?.totalUsers),       lbl:"Total Users",          sub:`+${fmt(stats?.newUsersWeekly)} this week` },
     { ico:"📊", bg:"var(--gbg)", val:fmt(stats?.activeMarkets),    lbl:"Active Markets",       sub:`${fmt(stats?.resolvedMarkets)} resolved` },
     { ico:"🎯", bg:"var(--pbg)", val:fmt(stats?.totalPredictions), lbl:"Total Predictions",    sub:`${fmt(stats?.weeklyPreds)} this week` },
-    { ico:"💰", bg:"var(--abg)", val:fmtVet(stats?.totalVetStaked),lbl:"Total VET Staked",     sub:"All time" },
-    { ico:"🏦", bg:"var(--abg)", val:fmtVet(stats?.activePoolVet), lbl:"VET in Active Pools",  sub:"Currently locked" },
+    { ico:"💰", bg:"var(--abg)", val:fmtVet(stats?.totalVetStaked),lbl:"Total POOZ Staked",     sub:"All time" },
+    { ico:"🏦", bg:"var(--abg)", val:fmtVet(stats?.activePoolVet), lbl:"POOZ in Active Pools",  sub:"Currently locked" },
     { ico:"💎", bg:"var(--gbg)", val:fmtVet(fees),                 lbl:"Platform Fees (1.5%)", sub:"From resolved markets" },
     { ico:"📈", bg:"var(--bbg)", val:fmtVet(stats?.weeklyVet),     lbl:"Weekly Volume",        sub:"Last 7 days" },
     { ico:"🏆", bg:"var(--pbg)", val:fmt(stats?.resolvedMarkets),  lbl:"Resolved Markets",     sub:`${fmt(stats?.cancelledMarkets)} cancelled` },
@@ -505,7 +505,7 @@ function MarketsPage() {
       <div className="adm-card">
         <table className="adm-table">
           <thead>
-            <tr><th>Market</th><th>Category</th><th>Status</th><th>Pool (VET)</th><th>YES/NO</th><th>Participants</th><th>Closes</th><th>Actions</th></tr>
+            <tr><th>Market</th><th>Category</th><th>Status</th><th>Pool (POOZ)</th><th>YES/NO</th><th>Participants</th><th>Closes</th><th>Actions</th></tr>
           </thead>
           <tbody>
             {loading && <tr><td colSpan={8} style={{textAlign:"center",padding:30,color:"var(--text3)"}}>Loading...</td></tr>}
@@ -721,7 +721,7 @@ function UsersPage() {
       </div>
       <div className="adm-card">
         <table className="adm-table">
-          <thead><tr><th>User</th><th>Auth</th><th>Wallet</th><th>Predictions</th><th>Win Rate</th><th>VET Earned</th><th>Joined</th><th>Role</th><th>Actions</th></tr></thead>
+          <thead><tr><th>User</th><th>Auth</th><th>Wallet</th><th>Predictions</th><th>Win Rate</th><th>POOZ Earned</th><th>Joined</th><th>Role</th><th>Actions</th></tr></thead>
           <tbody>
             {loading && <tr><td colSpan={9} style={{textAlign:"center",padding:30,color:"var(--text3)"}}>Loading...</td></tr>}
             {!loading && filtered.map(u => (
@@ -778,7 +778,7 @@ function TransactionsPage() {
       </div>
       <div className="adm-card">
         <table className="adm-table">
-          <thead><tr><th>Type</th><th>User</th><th>Amount (VET)</th><th>Market</th><th>Tx Hash</th><th>Status</th><th>Date</th></tr></thead>
+          <thead><tr><th>Type</th><th>User</th><th>Amount (POOZ)</th><th>Market</th><th>Tx Hash</th><th>Status</th><th>Date</th></tr></thead>
           <tbody>
             {loading && <tr><td colSpan={7} style={{textAlign:"center",padding:30,color:"var(--text3)"}}>Loading...</td></tr>}
             {!loading && filtered.map(t => (

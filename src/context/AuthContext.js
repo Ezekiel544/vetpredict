@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // ── Live VET price every 5 minutes ─────────────────────────
+  // ── Live POOZ price every 5 minutes ─────────────────────────
   useEffect(() => {
     const load = () => fetchVetPrice().then(r => setVetPrice(r.data.usd || 0.045)).catch(() => {});
     load();
@@ -148,7 +148,7 @@ export function AuthProvider({ children }) {
     } catch {}
   };
 
-  // ── VET to USD converter ────────────────────────────────────
+  // ── POOZ to USD converter ────────────────────────────────────
   const toUsd = (vet) => {
     const n = parseFloat(String(vet).replace(/[^0-9.]/g, ""));
     if (isNaN(n) || n === 0) return "$0.00";

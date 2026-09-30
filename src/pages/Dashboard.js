@@ -311,7 +311,7 @@ const addrInit  = a => a ? a.slice(2,4).toUpperCase() : "0x";
 const getDisplayName = u => u.walletUser ? truncAddr(u.walletAddress) : (u.displayName||"User");
 const getInitials    = u => u.walletUser ? addrInit(u.walletAddress) : (u.displayName?.slice(0,2).toUpperCase()||"US");
 
-const fmtVet = (n) => n ? `${parseFloat(n).toLocaleString()} VET` : "0 VET";
+const fmtVet = (n) => n ? `${parseFloat(n).toLocaleString()} POOZ` : "0 POOZ";
 const fmtDate = (d) => {
   if(!d) return "";
   const diff = Date.now() - new Date(d).getTime();
@@ -380,7 +380,7 @@ function ConnectWalletPrompt({ open, onClose, onConnected }) {
           <div className="mico" style={{background:"var(--vbg)",fontSize:26}}>🔷</div>
           <div className="mtitle">Connect VeWorld to Predict</div>
           <div className="msub" style={{lineHeight:1.6}}>
-            You are signed in with email or Google. To place predictions and stake VET,
+            You are signed in with email or Google. To place predictions and stake POOZ,
             you need to connect a VeWorld wallet.
           </div>
         </div>
@@ -389,7 +389,7 @@ function ConnectWalletPrompt({ open, onClose, onConnected }) {
         <div style={{background:"var(--bg3)",borderRadius:10,padding:"12px 14px",marginBottom:16,fontSize:12,color:"var(--text2)",lineHeight:1.7}}>
           <div style={{marginBottom:4}}>📱 <strong>Don't have VeWorld?</strong></div>
           <div>Download from <strong style={{color:"var(--vet)"}}>veworld.net</strong> — free, 2 mins to set up.</div>
-          <div style={{marginTop:6}}>🔑 Get testnet VET at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
+          <div style={{marginTop:6}}>🔑 Get testnet POOZ at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
         </div>
         <button className="btn btn-p btn-bl" onClick={handleConnect} disabled={loading}>
           {loading ? step || "Connecting..." : "Connect VeWorld Wallet →"}
@@ -420,7 +420,7 @@ function PredictModal({ market, user, open, onClose, onSuccess }) {
 
   const handlePlace = async () => {
     const stakeVet = parseFloat(amt);
-    if (isNaN(stakeVet) || stakeVet < 1) { setMsg({text:"Minimum stake is 1 VET",ok:false}); return; }
+    if (isNaN(stakeVet) || stakeVet < 1) { setMsg({text:"Minimum stake is 1 POOZ",ok:false}); return; }
     if (!user.walletUser) { setShowConnect(true); return; }
     if (!hasConnex()) { setMsg({text:"VeWorld wallet not detected.",ok:false}); return; }
     setLoading(true); setMsg({text:"",ok:false});
@@ -474,20 +474,20 @@ function PredictModal({ market, user, open, onClose, onSuccess }) {
               </div>
             ))}
           </div>
-          <div style={{fontSize:10,color:"var(--text3)",fontWeight:700,marginBottom:6,textTransform:"uppercase",letterSpacing:"0.5px"}}>Amount (VET)</div>
+          <div style={{fontSize:10,color:"var(--text3)",fontWeight:700,marginBottom:6,textTransform:"uppercase",letterSpacing:"0.5px"}}>Amount (POOZ)</div>
           <div className="qb-chips" style={{marginBottom:8}}>
             {["25","50","100","250"].map(a=>(
               <div key={a} className={`chip${amt===a?" sel":""}`} onClick={()=>setAmt(a)}>{a}</div>
             ))}
           </div>
-          <input className="inp" type="number" value={amt} onChange={e=>setAmt(e.target.value)} placeholder="Min 1 VET"/>
+          <input className="inp" type="number" value={amt} onChange={e=>setAmt(e.target.value)} placeholder="Min 1 POOZ"/>
           <div className="qb-sum" style={{marginBottom:14}}>
-            <div className="qb-sumrow"><span style={{color:"var(--text2)"}}>Stake</span><span>{amt||0} VET ({toUsd(amt)})</span></div>
+            <div className="qb-sumrow"><span style={{color:"var(--text2)"}}>Stake</span><span>{amt||0} POOZ ({toUsd(amt)})</span></div>
             <div className="qb-sumrow"><span style={{color:"var(--text2)"}}>Odds</span><span>{odds}x</span></div>
             <div className="qb-sumrow"><span style={{color:"var(--text2)"}}>Platform fee</span><span style={{color:"var(--text3)"}}>1.5%</span></div>
             <div className="qb-sumrow" style={{borderTop:"1px solid var(--border)",paddingTop:8,marginTop:4}}>
               <span style={{fontWeight:700}}>Potential win</span>
-              <span style={{color:"var(--green)",fontWeight:700}}>+{pot} VET ({toUsd(pot)})</span>
+              <span style={{color:"var(--green)",fontWeight:700}}>+{pot} POOZ ({toUsd(pot)})</span>
             </div>
           </div>
           {step&&<div style={{fontSize:11,color:"var(--amber)",textAlign:"center",marginBottom:8}}>{step}</div>}
@@ -528,7 +528,7 @@ function QuickBet({onNavigate, user}) {
   const handlePlace = async () => {
     if(!market) return;
     const stakeVet = parseFloat(amt);
-    if(isNaN(stakeVet)||stakeVet < 1) { setMsg({text:"Minimum stake is 1 VET",ok:false}); return; }
+    if(isNaN(stakeVet)||stakeVet < 1) { setMsg({text:"Minimum stake is 1 POOZ",ok:false}); return; }
     if(user.walletUser) {
       if(!hasConnex()) { setMsg({text:"VeWorld wallet not detected.",ok:false}); return; }
       setLoading(true); setMsg({text:"",ok:false});
@@ -578,17 +578,17 @@ function QuickBet({onNavigate, user}) {
               </div>
             ))}
           </div>
-          <div style={{fontSize:10,color:"var(--text3)",fontWeight:700,marginBottom:6,textTransform:"uppercase",letterSpacing:"0.5px"}}>Amount (VET)</div>
+          <div style={{fontSize:10,color:"var(--text3)",fontWeight:700,marginBottom:6,textTransform:"uppercase",letterSpacing:"0.5px"}}>Amount (POOZ)</div>
           <div className="qb-chips">
             {["25","50","100","250"].map(a=>(
               <div key={a} className={`chip${amt===a?" sel":""}`} onClick={()=>setAmt(a)}>{a}</div>
             ))}
           </div>
-          <input className="inp" type="number" value={amt} onChange={e=>setAmt(e.target.value)} placeholder="Min 1 VET"/>
+          <input className="inp" type="number" value={amt} onChange={e=>setAmt(e.target.value)} placeholder="Min 1 POOZ"/>
           <div className="qb-sum">
-            <div className="qb-sumrow"><span style={{color:"var(--text2)"}}>Stake</span><span>{amt||0} VET</span></div>
+            <div className="qb-sumrow"><span style={{color:"var(--text2)"}}>Stake</span><span>{amt||0} POOZ</span></div>
             <div className="qb-sumrow"><span style={{color:"var(--text2)"}}>Odds</span><span>{odds}x</span></div>
-            <div className="qb-sumrow"><span>Potential win</span><span>+{pot} VET ({toUsd(pot)})</span></div>
+            <div className="qb-sumrow"><span>Potential win</span><span>+{pot} POOZ ({toUsd(pot)})</span></div>
             <div className="qb-sumrow"><span style={{color:"var(--text3)"}}>Platform fee</span><span style={{color:"var(--text3)"}}>1.5%</span></div>
           </div>
           {step&&<div style={{fontSize:11,color:"var(--amber)",marginBottom:8,textAlign:"center"}}>{step}</div>}
@@ -964,15 +964,15 @@ function WalletPage({user}) {
     <div className="pg">
       <div style={{marginBottom:18}}>
         <div style={{fontFamily:"var(--fh)",fontSize:22,fontWeight:800,color:"var(--text)",marginBottom:4}}>Wallet</div>
-        <div style={{fontSize:13,color:"var(--text2)"}}>Your VET balance and transaction history</div>
+        <div style={{fontSize:13,color:"var(--text2)"}}>Your POOZ balance and transaction history</div>
       </div>
       <div className="w-hero">
         <div className="w-top">
           <div>
             <div style={{fontSize:11,color:"var(--text3)",fontWeight:600,textTransform:"uppercase",letterSpacing:"0.5px",marginBottom:4}}>{isW ? "Live Wallet Balance" : "Platform Balance"}</div>
-            <div className="w-bal">{loading && !liveBalance ? "..." : `${availVet.toFixed(2)} VET`}</div>
+            <div className="w-bal">{loading && !liveBalance ? "..." : `${availVet.toFixed(2)} POOZ`}</div>
             <div className="w-usd">{`≈ ${toUsd(availVet)} USD`}</div>
-            {lockedVet>0&&<div style={{fontSize:11,color:"var(--amber)",marginTop:3}}>{lockedVet.toFixed(2)} VET locked in active predictions</div>}
+            {lockedVet>0&&<div style={{fontSize:11,color:"var(--amber)",marginTop:3}}>{lockedVet.toFixed(2)} POOZ locked in active predictions</div>}
             {isW&&<div style={{fontSize:10,color:"var(--text3)",marginTop:2}}>Updates every 30 seconds on-chain</div>}
           </div>
           <div className="wacts">
@@ -1005,7 +1005,7 @@ function WalletPage({user}) {
           ) : (
             <div style={{padding:"20px 16px"}}>
               <div style={{fontSize:13,color:"var(--text2)",marginBottom:8,lineHeight:1.6}}>Connect a VeWorld wallet to start predicting.</div>
-              <div style={{fontSize:12,color:"var(--text3)",marginBottom:14}}>Get VeWorld at <strong style={{color:"var(--vet)"}}>veworld.net</strong> · Testnet VET at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
+              <div style={{fontSize:12,color:"var(--text3)",marginBottom:14}}>Get VeWorld at <strong style={{color:"var(--vet)"}}>veworld.net</strong> · Testnet POOZ at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
               {connectMsg.text && <div style={{fontSize:12,color:connectMsg.ok?"var(--green)":"var(--red)",marginBottom:10}}>{connectMsg.text}</div>}
               <button className="btn btn-vet btn-sm" disabled={connecting} onClick={async()=>{
                 setConnecting(true);
@@ -1179,9 +1179,9 @@ function ProfilePage({user}) {
 function SupportPage() {
   const [open,setOpen] = useState(null);
   const faqs = [
-    {q:"How do predictions work?",a:"You stake VET on the outcome of a market. If correct, you win a share of the total pool proportional to your stake."},
+    {q:"How do predictions work?",a:"You stake POOZ on the outcome of a market. If correct, you win a share of the total pool proportional to your stake."},
     {q:"How are markets resolved?",a:"Markets are resolved by the admin manually based on real-world outcomes. Results are recorded on-chain."},
-    {q:"Is my VET safe?",a:"All funds are held in smart contracts on-chain — fully non-custodial. Pooz never holds your assets directly."},
+    {q:"Is my POOZ safe?",a:"All funds are held in smart contracts on-chain — fully non-custodial. Pooz never holds your assets directly."},
     {q:"What are the fees?",a:"Pooz charges a 1.5% platform fee on winning payouts only. No fees for deposits, withdrawals, or losing predictions."},
     {q:"How do I withdraw?",a:"Go to the Wallet page and tap Withdraw. Funds arrive in your connected wallet within 1–3 minutes."},
   ];

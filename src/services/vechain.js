@@ -107,7 +107,7 @@ export const placePredictionOnChain = async ({ contractMarketId, isYes, stakeVet
   const data     = `${PREDICT_SIG}${encodeUint256(contractMarketId)}${encodeBool(isYes)}`;
   const result   = await signTx(
     [{ to: CONTRACT, value: stakeWei, data }],
-    `Predict ${isYes ? "YES" : "NO"} with ${stakeVet} VET`
+    `Predict ${isYes ? "YES" : "NO"} with ${stakeVet} POOZ`
   );
   return result.txid;
 };

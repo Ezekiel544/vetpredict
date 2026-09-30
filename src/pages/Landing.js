@@ -47,42 +47,42 @@ const STATIC_MARKETS = [
     category: 'Crypto',
     title: 'Will Bitcoin close above $120,000 this month?',
     yesPercent: 68,
-    pool: '42,860 VET',
+    pool: '42,860 POOZ',
   },
   {
     _id: '2',
     category: 'Sports',
     title: 'Will Arsenal win their next Premier League match?',
     yesPercent: 74,
-    pool: '18,240 VET',
+    pool: '18,240 POOZ',
   },
   {
     _id: '3',
     category: 'Entertainment',
     title: "Will this film win Best Picture at next year's awards?",
     yesPercent: 41,
-    pool: '9,670 VET',
+    pool: '9,670 POOZ',
   },
   {
     _id: '4',
     category: 'Politics',
     title: 'Will the proposed trade bill pass this quarter?',
     yesPercent: 57,
-    pool: '24,110 VET',
+    pool: '24,110 POOZ',
   },
   {
     _id: '5',
     category: 'Gaming',
     title: 'Will the new release reach one million players?',
     yesPercent: 82,
-    pool: '12,890 VET',
+    pool: '12,890 POOZ',
   },
   {
     _id: '6',
     category: 'Stocks',
     title: 'Will the index finish the week in green?',
     yesPercent: 53,
-    pool: '31,420 VET',
+    pool: '31,420 POOZ',
   },
 ];
 
@@ -103,7 +103,7 @@ const FILTERS = [
 const FAQS = [
   [
     'What is Pooz?',
-    'Pooz is a decentralised prediction market settled on-chain. Predict real-world outcomes and earn VET when you are right.',
+    'Pooz is a decentralised prediction market settled on-chain. Predict real-world outcomes and earn POOZ when you are right.',
   ],
   [
     'Are my funds safe?',
@@ -218,7 +218,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      "The non-custodial aspect is a deal-breaker for me — in the best way. My VET never leaves my wallet until a payout hits. That's how DeFi should work.",
+      "The non-custodial aspect is a deal-breaker for me — in the best way. My POOZ never leaves my wallet until a payout hits. That's how DeFi should work.",
     name: 'Jake R.',
     handle: '@jr_predict',
     win: '+190%',
@@ -226,7 +226,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      'Got into the Arsenal market at 62% YES before the match. Final score confirmed it. VET landed in seconds. No friction, no waiting, just clean resolution.',
+      'Got into the Arsenal market at 62% YES before the match. Final score confirmed it. POOZ landed in seconds. No friction, no waiting, just clean resolution.',
     name: 'Stella M.',
     handle: '@stella_wins',
     win: '+155%',
@@ -260,7 +260,7 @@ const ACTIVITY_FEED = [
     name: 'Jake R.',
     action: 'predicted',
     market: 'BTC above $120k',
-    amount: '800 VET',
+    amount: '800 POOZ',
     time: '2s ago',
     side: 'YES',
   },
@@ -269,7 +269,7 @@ const ACTIVITY_FEED = [
     name: 'Priya K.',
     action: 'predicted',
     market: 'Arsenal next match',
-    amount: '1,200 VET',
+    amount: '1,200 POOZ',
     time: '14s ago',
     side: 'YES',
   },
@@ -278,7 +278,7 @@ const ACTIVITY_FEED = [
     name: 'Marcus T.',
     action: 'won',
     market: 'ETH above $5k',
-    amount: '+3,440 VET',
+    amount: '+3,440 POOZ',
     time: '1m ago',
     side: null,
   },
@@ -287,7 +287,7 @@ const ACTIVITY_FEED = [
     name: 'Stella M.',
     action: 'predicted',
     market: 'Fed rate cut Sept',
-    amount: '500 VET',
+    amount: '500 POOZ',
     time: '2m ago',
     side: 'YES',
   },
@@ -296,7 +296,7 @@ const ACTIVITY_FEED = [
     name: 'Tobias F.',
     action: 'predicted',
     market: 'GTA VI record launch',
-    amount: '2,000 VET',
+    amount: '2,000 POOZ',
     time: '3m ago',
     side: 'YES',
   },
@@ -305,7 +305,7 @@ const ACTIVITY_FEED = [
     name: 'Aisha N.',
     action: 'won',
     market: 'Champions League — City',
-    amount: '+1,920 VET',
+    amount: '+1,920 POOZ',
     time: '5m ago',
     side: null,
   },
@@ -314,7 +314,7 @@ const ACTIVITY_FEED = [
     name: 'DeltaKnow',
     action: 'predicted',
     market: 'S&P 500 hits 6,000',
-    amount: '600 VET',
+    amount: '600 POOZ',
     time: '7m ago',
     side: 'NO',
   },
@@ -520,7 +520,7 @@ function Cube3D() {
           </div>
 
           <div className="face-label">
-            VET Traded
+            POOZ Traded
           </div>
         </div>
 
@@ -645,7 +645,7 @@ function HeroSunScene() {
       </div>
 
       <div className="vp-floating-data vp-data-two">
-        <span>VET</span>
+        <span>POOZ</span>
         <strong>+2.81%</strong>
       </div>
 
@@ -660,7 +660,7 @@ function HeroSunScene() {
   );
 }
 // ─────────────────────────────────────────────────────────────
-// VET CARD
+// POOZ CARD
 // ─────────────────────────────────────────────────────────────
 
 function VetCard() {
@@ -678,7 +678,7 @@ function VetCard() {
           </div>
 
           <div className="vc-big">
-            VET<span>.</span>
+            POOZ<span>.</span>
           </div>
 
           <div className="vc-ticker">
@@ -702,7 +702,7 @@ function VetCard() {
           </div>
 
           <div className="vc-back-num">
-            2M+ VET
+            2M+ POOZ
           </div>
 
           <div className="vc-back-label">
@@ -1101,7 +1101,7 @@ function Card({
 
   const poolDisplay =
     poolVet && parseFloat(poolVet) > 0
-      ? `${poolVet} VET`
+      ? `${poolVet} POOZ`
       : safeMarket.pool || 'New';
 
   const timeLeft =
@@ -1477,7 +1477,7 @@ export default function Landing() {
       <p className="vp-hero-description">
         Turn your knowledge into an edge.
         Predict real-world outcomes, compete with
-        other predictors and earn VET when your
+        other predictors and earn POOZ when your
         calls are right.
       </p>
 
@@ -1535,7 +1535,7 @@ export default function Landing() {
 
   <div className="ticker vp-ticker">
     <span>
-      VET <b>$0.033</b> <i>+2.81%</i>
+      POOZ <b>$0.033</b> <i>+2.81%</i>
     </span>
 
     <span>
@@ -1720,7 +1720,7 @@ export default function Landing() {
           <div className="signal-art">
 
             <div className="signal-core">
-              <small>VET</small>
+              <small>POOZ</small>
               <b>◈</b>
             </div>
 
@@ -1729,7 +1729,7 @@ export default function Landing() {
             </div>
 
             <div className="data d2">
-              12.4k VET pool
+              12.4k POOZ pool
             </div>
 
             <div className="signal-ring r1" />
@@ -1765,7 +1765,7 @@ export default function Landing() {
               Pooz is growing fast. Over
               10,000 active predictors have
               placed bets across 240+ markets,
-              with over 2 million VET settled
+              with over 2 million POOZ settled
               on-chain without a single disputed
               payout.
             </p>
@@ -1775,7 +1775,7 @@ export default function Landing() {
               {[
                 ['240', '+', 'Live Markets'],
                 ['10k', '+', 'Predictors'],
-                ['2M', '+', 'VET Settled'],
+                ['2M', '+', 'POOZ Settled'],
                 ['99.8', '%', 'Resolution Rate'],
               ].map(
                 ([number, suffix, label]) => (
@@ -1847,7 +1847,7 @@ export default function Landing() {
             [
               '02',
               'Fund wallet',
-              'Your VET stays in your wallet. Top up directly from Robinhood or any supported exchange.',
+              'Your POOZ stays in your wallet. Top up directly from Robinhood or any supported exchange.',
             ],
             [
               '03',
@@ -1914,7 +1914,7 @@ export default function Landing() {
               leaderboard tracks the sharpest
               minds across every market category.
               Climb the ranks and earn recognition
-              alongside your VET.
+              alongside your POOZ.
             </p>
 
             <button
@@ -1995,7 +1995,7 @@ export default function Landing() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
-          VET TOKEN
+          POOZ TOKEN
       ═══════════════════════════════════════════════════════ */}
 
       <section
@@ -2013,13 +2013,13 @@ export default function Landing() {
             <h2>
               Powered by{' '}
               <span>
-                VET.
+                POOZ.
               </span>
             </h2>
 
             <p>
-              VET is fast,
-              cheap, and enterprise-grade. VET
+              POOZ is fast,
+              cheap, and enterprise-grade. POOZ
               makes Pooz possible — ultra-low
               gas fees mean even small precision
               bets are worthwhile.
@@ -2036,7 +2036,7 @@ export default function Landing() {
                 [
                   '💸',
                   'Micro-transaction ready',
-                  'Gas fees cost fractions of a cent. Bet 50 VET without burning half on fees.',
+                  'Gas fees cost fractions of a cent. Bet 50 POOZ without burning half on fees.',
                 ],
                 [
                   '🌱',
@@ -2112,7 +2112,7 @@ export default function Landing() {
             <p>
               Transparent technology, no
               custodial shortcuts. Your
-              information and your VET remain
+              information and your POOZ remain
               yours — always.
             </p>
 
@@ -2124,7 +2124,7 @@ export default function Landing() {
               [
                 '⌘',
                 'Non-custodial',
-                'Your VET stays in your wallet at all times. We never touch your principal.',
+                'Your POOZ stays in your wallet at all times. We never touch your principal.',
               ],
               [
                 '◎',
