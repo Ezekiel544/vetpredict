@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { getMe, loginEmail, signupEmail, getNonce, loginWallet, fetchVetPrice, linkWallet } from "../services/api";
+import { getMe, loginEmail, signupEmail, getNonce, loginWallet, fetchVetPrice, linkWallet, linkNonce } from "../services/api";
 import { getWalletAddress, signAuthMessage, getVetBalance, waitForConnex } from "../services/vechain";
 import { io } from "socket.io-client";
 
@@ -109,10 +109,23 @@ export function AuthProvider({ children }) {
       address,
       signature: certResult.signature,
       signer:    certResult.signer,
+      signatureType: "vechain",
     });
 
     saveSession(authRes.data.token, authRes.data.user);
     return authRes.data.user;
+  };
+
+  // ── Login with any EVM wallet (MetaMask, Coinbase, Rainbow, …) ──
+  const loginWithAnyWallet = async ({ address, signature, signer, signatureType = "eip191" }) => {
+    const res = await loginWallet({
+      address,
+      signature,
+      signer,
+      signatureType,
+    });
+    saveSession(res.data.token, res.data.user);
+    return res.data.user;
   };
 
   // ── Link wallet to existing email/Google account ────────────
@@ -125,7 +138,18 @@ export function AuthProvider({ children }) {
     }
 
     const address = await getWalletAddress();
-    const res = await linkWallet({ address });
+
+    // Sign the link message issued by the backend so the wallet is verified
+    const nonceRes = await linkNonce({ address });
+    const { message } = nonceRes.data;
+    const certResult = await signAuthMessage(address, message);
+
+    const res = await linkWallet({
+      address,
+      signature: certResult.signature,
+      signer:    certResult.signer,
+      signatureType: "vechain",
+    });
     saveSession(res.data.token, res.data.user);
     return res.data.user;
   };
@@ -163,6 +187,7 @@ export function AuthProvider({ children }) {
       user, loading, socket, vetPrice, toUsd,
       liveBalance,
       loginWithEmail, signupWithEmail, loginWithWallet,
+      loginWithAnyWallet,
       linkWalletToAccount,
       logout, refreshUser, setUser,
     }}>

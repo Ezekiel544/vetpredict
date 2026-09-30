@@ -3,17 +3,21 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@rainbow-me/rainbowkit": "^2.2.11",
+    "@tanstack/react-query": "^5.104.0",
     "@vechain/connex": "^2.3.2",
     "axios": "^1.6.2",
     "lucide-react": "^1.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "socket.io-client": "^4.6.2"
+    "socket.io-client": "^4.6.2",
+    "viem": "^2.57.1",
+    "wagmi": "^2.19.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build"
   },
   "browserslist": {
     "production": [
@@ -30,6 +34,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.27",
     "postcss": "^8.5.9",
+    "react-app-rewired": "^2.2.1",
     "tailwindcss": "^4.2.2"
   }
 }

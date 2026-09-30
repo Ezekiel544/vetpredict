@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { fetchMarkets } from '../services/api';
+import { fetchMarkets, getNonce, loginWallet } from '../services/api';
+import { useSignMessage } from 'wagmi';
+import { useEVMWallet } from '../hooks/useEVMWallet';
 import Heroimg from './heroimg.png';
 import './global.css';
 import Poozimg from './pooz_logo.png';
@@ -744,7 +746,11 @@ function Modal({
     loginWithEmail,
     signupWithEmail,
     loginWithWallet,
+    loginWithAnyWallet,
   } = useAuth();
+
+  const { address, connectorName, openConnectModal } = useEVMWallet();
+  const { signMessageAsync } = useSignMessage();
 
   const [tab, setTab] = useState(mode || 'signup');
   const [done, setDone] = useState(false);
@@ -777,6 +783,15 @@ function Modal({
       document.body.style.overflow = '';
     };
   }, [mode]);
+
+  const pendingWalletRef = useRef(null);
+
+  useEffect(() => {
+    if (pendingWalletRef.current && address) {
+      pendingWalletRef.current = null;
+      handleWalletAny();
+    }
+  }, [address]);
 
   if (!mode) return null;
 
@@ -860,6 +875,46 @@ function Modal({
       setError(
         'VeWorld not detected. Install the extension from veworld.net'
       );
+    }
+  };
+
+  const handleWalletAny = async () => {
+    setError('');
+
+    if (typeof window === 'undefined') {
+      setError('Wallet connection is only available in the browser.');
+      return;
+    }
+
+    if (!address) {
+      pendingWalletRef.current = handleWalletAny;
+      openConnectModal();
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const nonceRes = await getNonce(address);
+      const { message } = nonceRes.data;
+      const signature = await signMessageAsync({ message });
+      const signatureType =
+        connectorName === 'VeWorld' ? 'vechain' : 'eip191';
+      await loginWithAnyWallet({
+        address,
+        signature,
+        signer: address,
+        signatureType,
+      });
+      setDone(true);
+    } catch (err) {
+      setError(
+        err?.response?.data?.error ||
+          err?.message ||
+          'Wallet connection failed.'
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -1042,17 +1097,55 @@ function Modal({
                 </span>
               </div>
             ) : (
-              <button
-                type="button"
-                className="wallet-btn"
-                onClick={handleWallet}
-                disabled={loading}
-              >
-                ◇{' '}
-                {loading
-                  ? 'Connecting...'
-                  : 'Connect wallet'}
-              </button>
+              <>
+                <button
+                  type="button"
+                  className="wallet-btn"
+                  onClick={handleWalletAny}
+                  disabled={loading}
+                >
+                  {loading
+                    ? 'Connecting...'
+                    : address
+                    ? `Sign in with ${address.slice(0, 6)}…${address.slice(-4)}`
+                    : 'Connect wallet'}
+                </button>
+
+                <div
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 11,
+                    color: 'var(--text3)',
+                    marginTop: 8,
+                  }}
+                >
+                  MetaMask · Coinbase · Rainbow · WalletConnect · more
+                </div>
+
+                <div
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 12,
+                    color: 'var(--text3)',
+                    margin: '14px 0 8px',
+                  }}
+                >
+                  Using VeWorld?
+                </div>
+
+                <button
+                  type="button"
+                  className="wallet-btn"
+                  style={{
+                    borderColor: 'var(--border)',
+                    background: 'transparent',
+                  }}
+                  onClick={handleWallet}
+                  disabled={loading}
+                >
+                  ◇ Connect with VeWorld
+                </button>
+              </>
             )}
           </>
         )}

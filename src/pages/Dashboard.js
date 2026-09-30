@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useMarkets, useMyPredictions, useWallet, useLeaderboard, useNotifications } from "../hooks/useData";
-import { placePrediction, markNotifsRead, changePassword } from "../services/api";
+import { placePrediction, markNotifsRead, changePassword, linkWallet, linkNonce } from "../services/api";
 import { hasConnex, placePredictionOnChain, waitForTx, claimWinningsOnChain } from "../services/vechain";
+import { useSignMessage } from "wagmi";
+import { useEVMWallet } from "../hooks/useEVMWallet";
 import Poozimg from './pooz_logo.png';
 
 const injectStyles = (theme) => {
@@ -393,10 +395,80 @@ function ConnectWalletPrompt({ open, onClose, onConnected }) {
           <div>Download from <strong style={{color:"var(--vet)"}}>veworld.net</strong> — free, 2 mins to set up.</div>
           <div style={{marginTop:6}}>Get testnet POOZ at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
         </div>
-        <button className="btn btn-p btn-bl" onClick={handleConnect} disabled={loading}>
-          {loading ? step || "Connecting..." : "Connect Wallet →"}
+        <AnyWalletConnect onLinked={onConnected} label="Connect Wallet" showDivider={false} />
+        <div style={{ fontSize: 12, color: "var(--text3)", textAlign: "center", margin: "12px 0 8px" }}>Using VeWorld instead?</div>
+        <button className="btn btn-g btn-bl" onClick={handleConnect} disabled={loading} style={{ marginBottom: 8 }}>
+          {loading ? step || "Connecting..." : "Connect with VeWorld"}
         </button>
-        <button className="btn btn-g btn-bl" style={{marginTop:8}} onClick={onClose}>Cancel</button>
+        <button className="btn btn-g btn-bl" onClick={onClose}>Cancel</button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Any-Wallet Connect (Wagmi + RainbowKit) ──────────────────
+function AnyWalletConnect({ onLinked, label, showDivider = true }) {
+  const { refreshUser } = useAuth();
+  const { address, isConnected, connectorName, openConnectModal, disconnect } = useEVMWallet();
+  const { signMessageAsync } = useSignMessage();
+  const [linking, setLinking] = useState(false);
+  const [result,  setResult]  = useState(null);
+  const linkedRef = useRef(null);
+
+  useEffect(() => {
+    if (!isConnected || !address) return;
+    if (linkedRef.current === address) return;
+    linkedRef.current = address;
+    setResult(null);
+    setLinking(true);
+    const signatureType = connectorName === "VeWorld" ? "vechain" : "eip191";
+    linkNonce({ address })
+      .then((r) => r.data.message)
+      .then((message) => signMessageAsync({ message }))
+      .then((signature) => linkWallet({ address, signature, signer: address, signatureType }))
+      .then(() => {
+        setResult({ ok: true, text: `${connectorName || "Wallet"} linked to your account` });
+        refreshUser();
+        onLinked && onLinked();
+      })
+      .catch((err) => {
+        setResult({ ok: false, text: err.response?.data?.error || err.message || "Could not link wallet" });
+        linkedRef.current = null;
+      })
+      .finally(() => setLinking(false));
+  }, [isConnected, address, connectorName, signMessageAsync, refreshUser, onLinked]);
+
+  if (isConnected && address) {
+    return (
+      <>
+        <div className="wcrow" style={{ marginTop: 12, alignItems: "center" }}>
+          <div className="wcico" style={{ background: "var(--vbg)" }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v11a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V7z"/><path d="M3 7a2 2 0 0 0 2 2h14"/></svg>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="wcname">{connectorName || "Wallet"}</div>
+            <div className="wcaddr">{truncAddr(address)}</div>
+          </div>
+          <span className="wcpill" style={{ borderColor: linking ? "var(--amber)" : "var(--green)", color: linking ? "var(--amber)" : "var(--green)" }}>
+            {linking ? "Linking…" : result?.ok ? "Linked" : "Connected"}
+          </span>
+          <button className="btn btn-g" style={{ marginLeft: 8, padding: "3px 9px", fontSize: 11 }} onClick={disconnect} title="Disconnect">✕</button>
+        </div>
+        {result && !result.ok && <div style={{ fontSize: 12, color: "var(--red)", marginTop: 8 }}>{result.text}</div>}
+      </>
+    );
+  }
+
+  return (
+    <div>
+      {showDivider && (
+        <div style={{ fontSize: 12, color: "var(--text3)", textAlign: "center", margin: "12px 0 10px" }}>— or —</div>
+      )}
+      <button className="btn btn-p btn-bl btn-sm" onClick={openConnectModal} style={{ width: "100%" }}>
+        {label || "Connect any wallet"}
+      </button>
+      <div style={{ fontSize: 11, color: "var(--text3)", textAlign: "center", marginTop: 8 }}>
+        MetaMask · Coinbase · Rainbow · WalletConnect
       </div>
     </div>
   );
@@ -1011,7 +1083,9 @@ function WalletPage({user}) {
               <div style={{fontSize:13,color:"var(--text2)",marginBottom:8,lineHeight:1.6}}>Connect a wallet to start predicting.</div>
               <div style={{fontSize:12,color:"var(--text3)",marginBottom:14}}>Get VeWorld at <strong style={{color:"var(--vet)"}}>veworld.net</strong> · Testnet POOZ at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
               {connectMsg.text && <div style={{fontSize:12,color:connectMsg.ok?"var(--green)":"var(--red)",marginBottom:10}}>{connectMsg.text}</div>}
-              <button className="btn btn-vet btn-sm" disabled={connecting} onClick={async()=>{
+              <AnyWalletConnect onLinked={() => { refreshUser(); reload(); }} label="Connect Wallet" showDivider={false} />
+              <div style={{fontSize:12,color:"var(--text3)",textAlign:"center",margin:"12px 0 8px"}}>Using VeWorld instead?</div>
+              <button className="btn btn-vet btn-sm" style={{width:"100%",justifyContent:"center"}} disabled={connecting} onClick={async()=>{
                 setConnecting(true);
                 setConnectMsg({text:"Sign in VeWorld...",ok:false});
                 try {
@@ -1022,7 +1096,7 @@ function WalletPage({user}) {
                   setConnectMsg({text:e.response?.data?.error||e.message||"Connection failed",ok:false});
                 } finally { setConnecting(false); }
               }}>
-                {connecting ? "Connecting..." : "Connect Wallet"}
+                {connecting ? "Connecting..." : "Connect with VeWorld"}
               </button>
             </div>
           )}

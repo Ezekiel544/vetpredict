@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkpooz_frontend=globalThis.webpackChunkpooz_frontend||[]).push([[8274],{68274(o,n,a){a.r(n),a.d(n,{default:()=>e.n});var e=a(4537)}}]);

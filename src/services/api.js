@@ -33,6 +33,7 @@ export const resetPassword  = (token, password) => API.post("/auth/reset-passwor
 export const changePassword = (data) => API.post("/auth/change-password", data);
 export const verifyAdminCode = (code) => API.post("/auth/admin-verify", { code });
 export const linkWallet = (data) => API.post("/auth/link-wallet", data);
+export const linkNonce  = (data) => API.post("/auth/link-nonce", data);
 
 // ─── Markets ──────────────────────────────────────────────────
 export const fetchMarkets  = (params)  => API.get("/markets", { params });
