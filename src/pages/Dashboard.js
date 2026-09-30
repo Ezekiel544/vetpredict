@@ -377,22 +377,24 @@ function ConnectWalletPrompt({ open, onClose, onConnected }) {
       <div className="mbox" style={{maxWidth:400}}>
         <button className="mclose" onClick={onClose}>x</button>
         <div className="mhead">
-          <div className="mico" style={{background:"var(--vbg)",fontSize:26}}>🔷</div>
-          <div className="mtitle">Connect VeWorld to Predict</div>
+          <div className="mico" style={{background:"var(--vbg)",fontSize:26}}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v11a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V7z"/><path d="M3 7a2 2 0 0 0 2 2h14"/></svg>
+          </div>
+          <div className="mtitle">Connect Wallet</div>
           <div className="msub" style={{lineHeight:1.6}}>
             You are signed in with email or Google. To place predictions and stake POOZ,
-            you need to connect a VeWorld wallet.
+            you need to connect a wallet.
           </div>
         </div>
         {error && <div style={{background:"var(--rbg)",border:"1px solid var(--rbd)",color:"var(--red)",padding:"10px 14px",borderRadius:9,fontSize:13,marginBottom:14}}>{error}</div>}
         {step  && <div style={{fontSize:12,color:"var(--amber)",textAlign:"center",marginBottom:12}}>{step}</div>}
         <div style={{background:"var(--bg3)",borderRadius:10,padding:"12px 14px",marginBottom:16,fontSize:12,color:"var(--text2)",lineHeight:1.7}}>
-          <div style={{marginBottom:4}}>📱 <strong>Don't have VeWorld?</strong></div>
+          <div style={{marginBottom:4}}><strong>Don't have VeWorld?</strong></div>
           <div>Download from <strong style={{color:"var(--vet)"}}>veworld.net</strong> — free, 2 mins to set up.</div>
-          <div style={{marginTop:6}}>🔑 Get testnet POOZ at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
+          <div style={{marginTop:6}}>Get testnet POOZ at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
         </div>
         <button className="btn btn-p btn-bl" onClick={handleConnect} disabled={loading}>
-          {loading ? step || "Connecting..." : "Connect VeWorld Wallet →"}
+          {loading ? step || "Connecting..." : "Connect Wallet →"}
         </button>
         <button className="btn btn-g btn-bl" style={{marginTop:8}} onClick={onClose}>Cancel</button>
       </div>
@@ -992,10 +994,12 @@ function WalletPage({user}) {
       </div>
       <div className="w-cols">
         <div className="card" style={{margin:0}}>
-          <div className="ph"><span className="pt">🔗 Connected Wallet</span></div>
+          <div className="ph"><span className="pt">Connected Wallet</span></div>
           {isW ? (
             <div className="wcrow">
-              <div className="wcico" style={{background:"var(--vbg)"}}>🔷</div>
+              <div className="wcico" style={{background:"var(--vbg)"}}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v11a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V7z"/><path d="M3 7a2 2 0 0 0 2 2h14"/></svg>
+              </div>
               <div style={{flex:1,minWidth:0}}>
                 <div className="wcname">VeWorld</div>
                 <div className="wcaddr">{user.walletAddress}</div>
@@ -1004,7 +1008,7 @@ function WalletPage({user}) {
             </div>
           ) : (
             <div style={{padding:"20px 16px"}}>
-              <div style={{fontSize:13,color:"var(--text2)",marginBottom:8,lineHeight:1.6}}>Connect a VeWorld wallet to start predicting.</div>
+              <div style={{fontSize:13,color:"var(--text2)",marginBottom:8,lineHeight:1.6}}>Connect a wallet to start predicting.</div>
               <div style={{fontSize:12,color:"var(--text3)",marginBottom:14}}>Get VeWorld at <strong style={{color:"var(--vet)"}}>veworld.net</strong> · Testnet POOZ at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
               {connectMsg.text && <div style={{fontSize:12,color:connectMsg.ok?"var(--green)":"var(--red)",marginBottom:10}}>{connectMsg.text}</div>}
               <button className="btn btn-vet btn-sm" disabled={connecting} onClick={async()=>{
@@ -1018,7 +1022,7 @@ function WalletPage({user}) {
                   setConnectMsg({text:e.response?.data?.error||e.message||"Connection failed",ok:false});
                 } finally { setConnecting(false); }
               }}>
-                {connecting ? "Connecting..." : "🔷 Connect VeWorld Wallet"}
+                {connecting ? "Connecting..." : "Connect Wallet"}
               </button>
             </div>
           )}

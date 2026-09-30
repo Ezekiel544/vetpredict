@@ -4,6 +4,21 @@ import { fetchMarkets } from '../services/api';
 import Heroimg from './heroimg.png';
 import './global.css';
 import Poozimg from './pooz_logo.png';
+
+// ── Minimal line-icon set (replaces emoji glyphs) ─────────────
+const Ico = ({ children, size = 18, style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={style} aria-hidden="true">{children}</svg>
+);
+const DiamondIcon = (p) => (<Ico {...p}><rect x="7.2" y="7.2" width="9.6" height="9.6" rx="1.6" transform="rotate(45 12 12)" /></Ico>);
+const BoltIcon    = (p) => (<Ico {...p}><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z" /></Ico>);
+const CoinIcon    = (p) => (<Ico {...p}><circle cx="12" cy="12" r="9" /><path d="M12 7v10M9 9.6c0-1 1.3-1.6 3-1.6s3 .6 3 1.6-1.3 1.6-3 1.6-3 .7-3 1.6 1.3 1.6 3 1.6 3-.7 3-1.6" /></Ico>);
+const LeafIcon    = (p) => (<Ico {...p}><path d="M5 20c0-9 7-14 15-14-1 9-6 15-14 14" /><path d="M5 20C8 14 12 10 17 7" /></Ico>);
+const LockIcon    = (p) => (<Ico {...p}><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></Ico>);
+const ShieldIcon  = (p) => (<Ico {...p}><path d="M12 2 4 5v6c0 5 3.5 9.5 8 11 4.5-1.5 8-6 8-11V5l-8-3z" /><path d="M9 12l2 2 4-4" /></Ico>);
+const EyeIcon     = (p) => (<Ico {...p}><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></Ico>);
+const StarIcon    = (p) => (<Ico {...p}><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8-6.1-3.5-6.1 3.5 1.4-6.8L2.2 9.1l6.9-.8L12 2z" /></Ico>);
+const CheckIcon   = (p) => (<Ico {...p}><path d="M20 6 9 17l-5-5" /></Ico>);
+
 // ─────────────────────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────────────────────
@@ -147,49 +162,49 @@ const LEADERBOARD = [
   {
     rank: 1,
     name: 'CryptoSage',
-    avatar: 'C',
+    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
     markets: 142,
     gain: '+$14,820',
   },
   {
     rank: 2,
     name: 'SportsBrain',
-    avatar: 'S',
+    avatar: 'https://randomuser.me/api/portraits/men/14.jpg',
     markets: 98,
     gain: '+$9,440',
   },
   {
     rank: 3,
     name: 'Velorion',
-    avatar: 'V',
+    avatar: 'https://randomuser.me/api/portraits/men/45.jpg',
     markets: 87,
     gain: '+$7,110',
   },
   {
     rank: 4,
     name: 'NovaSeer',
-    avatar: 'N',
+    avatar: 'https://randomuser.me/api/portraits/women/32.jpg',
     markets: 76,
     gain: '+$5,880',
   },
   {
     rank: 5,
     name: 'PulseOracle',
-    avatar: 'P',
+    avatar: 'https://randomuser.me/api/portraits/men/68.jpg',
     markets: 64,
     gain: '+$4,200',
   },
   {
     rank: 6,
     name: 'DeltaKnow',
-    avatar: 'D',
+    avatar: 'https://randomuser.me/api/portraits/men/56.jpg',
     markets: 58,
     gain: '+$3,660',
   },
   {
     rank: 7,
     name: 'Ashkroft_X',
-    avatar: 'A',
+    avatar: 'https://randomuser.me/api/portraits/men/41.jpg',
     markets: 51,
     gain: '+$2,990',
   },
@@ -206,7 +221,7 @@ const TESTIMONIALS = [
     name: 'Marcus T.',
     handle: '@marcust_ve',
     win: '+340%',
-    avatar: 'M',
+    avatar: 'https://randomuser.me/api/portraits/men/12.jpg',
   },
   {
     quote:
@@ -214,7 +229,7 @@ const TESTIMONIALS = [
     name: 'Priya K.',
     handle: '@priyak_chain',
     win: '+218%',
-    avatar: 'P',
+    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
   },
   {
     quote:
@@ -222,7 +237,7 @@ const TESTIMONIALS = [
     name: 'Jake R.',
     handle: '@jr_predict',
     win: '+190%',
-    avatar: 'J',
+    avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
   },
   {
     quote:
@@ -230,7 +245,7 @@ const TESTIMONIALS = [
     name: 'Stella M.',
     handle: '@stella_wins',
     win: '+155%',
-    avatar: 'S',
+    avatar: 'https://randomuser.me/api/portraits/women/26.jpg',
   },
   {
     quote:
@@ -238,7 +253,7 @@ const TESTIMONIALS = [
     name: 'Tobias F.',
     handle: '@tobias_ve',
     win: '+270%',
-    avatar: 'T',
+    avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
   },
   {
     quote:
@@ -246,7 +261,7 @@ const TESTIMONIALS = [
     name: 'Aisha N.',
     handle: '@aishanve',
     win: '+128%',
-    avatar: 'A',
+    avatar: 'https://randomuser.me/api/portraits/women/60.jpg',
   },
 ];
 
@@ -256,7 +271,7 @@ const TESTIMONIALS = [
 
 const ACTIVITY_FEED = [
   {
-    avatar: 'J',
+    avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
     name: 'Jake R.',
     action: 'predicted',
     market: 'BTC above $120k',
@@ -265,7 +280,7 @@ const ACTIVITY_FEED = [
     side: 'YES',
   },
   {
-    avatar: 'P',
+    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
     name: 'Priya K.',
     action: 'predicted',
     market: 'Arsenal next match',
@@ -274,7 +289,7 @@ const ACTIVITY_FEED = [
     side: 'YES',
   },
   {
-    avatar: 'M',
+    avatar: 'https://randomuser.me/api/portraits/men/12.jpg',
     name: 'Marcus T.',
     action: 'won',
     market: 'ETH above $5k',
@@ -283,7 +298,7 @@ const ACTIVITY_FEED = [
     side: null,
   },
   {
-    avatar: 'S',
+    avatar: 'https://randomuser.me/api/portraits/women/26.jpg',
     name: 'Stella M.',
     action: 'predicted',
     market: 'Fed rate cut Sept',
@@ -292,7 +307,7 @@ const ACTIVITY_FEED = [
     side: 'YES',
   },
   {
-    avatar: 'T',
+    avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
     name: 'Tobias F.',
     action: 'predicted',
     market: 'GTA VI record launch',
@@ -301,7 +316,7 @@ const ACTIVITY_FEED = [
     side: 'YES',
   },
   {
-    avatar: 'A',
+    avatar: 'https://randomuser.me/api/portraits/women/60.jpg',
     name: 'Aisha N.',
     action: 'won',
     market: 'Champions League — City',
@@ -310,7 +325,7 @@ const ACTIVITY_FEED = [
     side: null,
   },
   {
-    avatar: 'D',
+    avatar: 'https://randomuser.me/api/portraits/men/56.jpg',
     name: 'DeltaKnow',
     action: 'predicted',
     market: 'S&P 500 hits 6,000',
@@ -324,7 +339,7 @@ const ACTIVITY_FEED = [
 // ARROW
 // ─────────────────────────────────────────────────────────────
 
-const Arrow = () => <span className="arrow">↗</span>;
+const Arrow = () => <span className="arrow"></span>;
 
 // ─────────────────────────────────────────────────────────────
 // 3D ORBIT GLOBE
@@ -465,7 +480,7 @@ function Cube3D() {
       <div className="cube-3d">
 
         <div className="cube-face front">
-          <span className="face-icon">◈</span>
+          <span className="face-icon"><DiamondIcon size={26} /></span>
 
           <div className="face-val">
             240<span>+</span>
@@ -477,7 +492,7 @@ function Cube3D() {
         </div>
 
         <div className="cube-face back">
-          <span className="face-icon">⚡</span>
+          <span className="face-icon"><BoltIcon size={26} /></span>
 
           <div className="face-val">
             1.5<span>%</span>
@@ -501,7 +516,7 @@ function Cube3D() {
         </div>
 
         <div className="cube-face right">
-          <span className="face-icon">✦</span>
+          <span className="face-icon"><StarIcon size={26} /></span>
 
           <div className="face-val">
             99<span>%</span>
@@ -871,7 +886,7 @@ function Modal({
         </button>
 
         <div className="modal-logo">
-          ✦
+          <StarIcon size={26} />
         </div>
 
         {done ? (
@@ -1036,7 +1051,7 @@ function Modal({
                 ◇{' '}
                 {loading
                   ? 'Connecting...'
-                  : 'Connect VeWorld wallet'}
+                  : 'Connect wallet'}
               </button>
             )}
           </>
@@ -1491,21 +1506,21 @@ export default function Landing() {
           }}
         >
           Explore markets
-          <span>↗</span>
+          {/* <span>↗</span> */}
         </a>
 
         <a className="ghost-btn vp-secondary-btn" href="#how">
           How it works
-          <span>↓</span>
+          {/* <span>↓</span> */}
         </a>
       </div>
 
       <div className="proof vp-proof">
         <div className="avatars">
-          <b>J</b>
-          <b>K</b>
-          <b>M</b>
-          <b>S</b>
+          <b><img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Predictor" /></b>
+          <b><img src="https://randomuser.me/api/portraits/women/21.jpg" alt="Predictor" /></b>
+          <b><img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Predictor" /></b>
+          <b><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Predictor" /></b>
         </div>
 
         <p>
@@ -1721,7 +1736,7 @@ export default function Landing() {
 
             <div className="signal-core">
               <small>POOZ</small>
-              <b>◈</b>
+              <b><DiamondIcon size={20} /></b>
             </div>
 
             <div className="data d1">
@@ -1872,7 +1887,7 @@ export default function Landing() {
                   {number}
                 </span>
 
-                <b>◈</b>
+                <b><DiamondIcon size={18} /></b>
 
                 <h3>
                   {title}
@@ -1956,19 +1971,13 @@ export default function Landing() {
                       : ''
                   }`}
                 >
-                  {user.rank === 1
-                    ? '🥇'
-                    : user.rank === 2
-                    ? '🥈'
-                    : user.rank === 3
-                    ? '🥉'
-                    : user.rank}
+                  {user.rank}
                 </div>
 
                 <div className="lb-user">
 
                   <div className="lb-avatar">
-                    {user.avatar}
+                    <img className="avatar-img" src={user.avatar} alt={user.name} />
                   </div>
 
                   <div>
@@ -2029,22 +2038,22 @@ export default function Landing() {
 
               {[
                 [
-                  '⚡',
+                  <BoltIcon size={20} />,
                   'Near-instant finality',
                   'Settles in ~10 seconds. Waiting minutes for a blockchain confirmation is a thing of the past.',
                 ],
                 [
-                  '💸',
+                  <CoinIcon size={20} />,
                   'Micro-transaction ready',
                   'Gas fees cost fractions of a cent. Bet 50 POOZ without burning half on fees.',
                 ],
                 [
-                  '🌱',
+                  <LeafIcon size={20} />,
                   'Sustainable chain',
                   'The network uses Proof of Authority — energy consumption is a fraction of proof-of-work chains.',
                 ],
                 [
-                  '🔐',
+                  <LockIcon size={20} />,
                   'Enterprise security',
                   'The same infrastructure trusted by Fortune 500 companies secures every prediction on Pooz.',
                 ],
@@ -2122,22 +2131,22 @@ export default function Landing() {
 
             {[
               [
-                '⌘',
+                <ShieldIcon size={18} />,
                 'Non-custodial',
                 'Your POOZ stays in your wallet at all times. We never touch your principal.',
               ],
               [
-                '◎',
+                <EyeIcon size={18} />,
                 'On-chain clarity',
                 'Every bet, every outcome, every payout is verifiable by anyone.',
               ],
               [
-                'ϟ',
+                <BoltIcon size={18} />,
                 'Instant settlements',
                 'Correct calls are rewarded automatically within seconds of resolution.',
               ],
               [
-                '✦',
+                <StarIcon size={18} />,
                 'Audited contracts',
                 'Our smart contracts have been independently audited and are open-source.',
               ],
@@ -2242,7 +2251,7 @@ export default function Landing() {
                 >
 
                   <div className="ai-avatar">
-                    {activity.avatar}
+                    <img className="avatar-img" src={activity.avatar} alt={activity.name} />
                   </div>
 
                   <div className="ai-content">
@@ -2371,7 +2380,7 @@ export default function Landing() {
                   <div className="tcard-user">
 
                     <div className="tcard-avatar">
-                      {testimonial.avatar}
+                      <img className="avatar-img" src={testimonial.avatar} alt={testimonial.name} />
                     </div>
 
                     <div>
@@ -2513,7 +2522,7 @@ export default function Landing() {
               fontWeight: 600,
             }}
           >
-            ✅ You're subscribed! Check your
+            You're subscribed! Check your
             inbox.
           </p>
         ) : (
