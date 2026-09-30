@@ -103,7 +103,7 @@ const FILTERS = [
 const FAQS = [
   [
     'What is Pooz?',
-    'Pooz is a decentralised prediction market built on VeChain. Predict real-world outcomes and earn VET when you are right.',
+    'Pooz is a decentralised prediction market settled on-chain. Predict real-world outcomes and earn VET when you are right.',
   ],
   [
     'Are my funds safe?',
@@ -123,7 +123,7 @@ const FAQS = [
   ],
   [
     'Which wallets are supported?',
-    'VeWorld is the native wallet. You can also sign in with Google or email — we create a managed VeChain wallet for you automatically.',
+    'VeWorld is the native wallet. You can also sign in with Google or email — we create a managed on-chain wallet for you automatically.',
   ],
 ];
 
@@ -242,7 +242,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      'Built on VeChain means gas is practically free. I can make small precision bets without burning fees. That changes the entire risk calculation.',
+      'Settling on-chain means gas is practically free. I can make small precision bets without burning fees. That changes the entire risk calculation.',
     name: 'Aisha N.',
     handle: '@aishanve',
     win: '+128%',
@@ -682,7 +682,7 @@ function VetCard() {
           </div>
 
           <div className="vc-ticker">
-            VeChain Token
+            Native Token
           </div>
         </div>
 
@@ -1460,7 +1460,7 @@ export default function Landing() {
 
       <div className="vp-status">
         <span className="vp-status-pulse" />
-        Built on VeChain
+        Launching on Robinhood · Settled On-chain
       </div>
 
       <h1>
@@ -1526,7 +1526,7 @@ export default function Landing() {
       </div>
 
       <div className="vp-visual-label vp-label-bottom">
-        <span>VECHAIN</span>
+        <span>ON-CHAIN</span>
         <b>DECENTRALIZED</b>
       </div>
     </div>
@@ -1555,7 +1555,7 @@ export default function Landing() {
 
     <span>
       <small />
-      BUILT ON VECHAIN
+      LAUNCHING ON ROBINHOOD
     </span>
   </div>
 </section>
@@ -1847,7 +1847,7 @@ export default function Landing() {
             [
               '02',
               'Fund wallet',
-              'Your VET stays in your wallet. Top up directly from any VeChain-compatible exchange.',
+              'Your VET stays in your wallet. Top up directly from Robinhood or any supported exchange.',
             ],
             [
               '03',
@@ -2018,7 +2018,7 @@ export default function Landing() {
             </h2>
 
             <p>
-              VeChain's native token is fast,
+              VET is fast,
               cheap, and enterprise-grade. VET
               makes Pooz possible — ultra-low
               gas fees mean even small precision
@@ -2031,17 +2031,17 @@ export default function Landing() {
                 [
                   '⚡',
                   'Near-instant finality',
-                  'VeChain settles in ~10 seconds. Waiting minutes for a blockchain confirmation is a thing of the past.',
+                  'Settles in ~10 seconds. Waiting minutes for a blockchain confirmation is a thing of the past.',
                 ],
                 [
                   '💸',
                   'Micro-transaction ready',
-                  'Gas fees on VeChain cost fractions of a cent. Bet 50 VET without burning half on fees.',
+                  'Gas fees cost fractions of a cent. Bet 50 VET without burning half on fees.',
                 ],
                 [
                   '🌱',
                   'Sustainable chain',
-                  'VeChain uses Proof of Authority — energy consumption is a fraction of proof-of-work chains.',
+                  'The network uses Proof of Authority — energy consumption is a fraction of proof-of-work chains.',
                 ],
                 [
                   '🔐',
@@ -2626,7 +2626,8 @@ export default function Landing() {
         </a>
 
         <p>
-          Built on VeChain. Non-custodial.
+          Launching on Robinhood. Settled On-chain.
+          Non-custodial.
           Transparent. © 2026
         </p>
 

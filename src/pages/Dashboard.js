@@ -381,7 +381,7 @@ function ConnectWalletPrompt({ open, onClose, onConnected }) {
           <div className="mtitle">Connect VeWorld to Predict</div>
           <div className="msub" style={{lineHeight:1.6}}>
             You are signed in with email or Google. To place predictions and stake VET,
-            you need to connect a VeChain wallet.
+            you need to connect a VeWorld wallet.
           </div>
         </div>
         {error && <div style={{background:"var(--rbg)",border:"1px solid var(--rbd)",color:"var(--red)",padding:"10px 14px",borderRadius:9,fontSize:13,marginBottom:14}}>{error}</div>}
@@ -973,7 +973,7 @@ function WalletPage({user}) {
             <div className="w-bal">{loading && !liveBalance ? "..." : `${availVet.toFixed(2)} VET`}</div>
             <div className="w-usd">{`≈ ${toUsd(availVet)} USD`}</div>
             {lockedVet>0&&<div style={{fontSize:11,color:"var(--amber)",marginTop:3}}>{lockedVet.toFixed(2)} VET locked in active predictions</div>}
-            {isW&&<div style={{fontSize:10,color:"var(--text3)",marginTop:2}}>Updates every 30 seconds from VeChain</div>}
+            {isW&&<div style={{fontSize:10,color:"var(--text3)",marginTop:2}}>Updates every 30 seconds on-chain</div>}
           </div>
           <div className="wacts">
             <button className="btn btn-p btn-sm">+ Deposit</button>
@@ -997,14 +997,14 @@ function WalletPage({user}) {
             <div className="wcrow">
               <div className="wcico" style={{background:"var(--vbg)"}}>🔷</div>
               <div style={{flex:1,minWidth:0}}>
-                <div className="wcname">VeChain — VeWorld</div>
+                <div className="wcname">VeWorld</div>
                 <div className="wcaddr">{user.walletAddress}</div>
               </div>
               <span className="wcpill">Connected</span>
             </div>
           ) : (
             <div style={{padding:"20px 16px"}}>
-              <div style={{fontSize:13,color:"var(--text2)",marginBottom:8,lineHeight:1.6}}>Connect a VeChain wallet to start predicting.</div>
+              <div style={{fontSize:13,color:"var(--text2)",marginBottom:8,lineHeight:1.6}}>Connect a VeWorld wallet to start predicting.</div>
               <div style={{fontSize:12,color:"var(--text3)",marginBottom:14}}>Get VeWorld at <strong style={{color:"var(--vet)"}}>veworld.net</strong> · Testnet VET at <strong style={{color:"var(--vet)"}}>faucet.vecha.in</strong></div>
               {connectMsg.text && <div style={{fontSize:12,color:connectMsg.ok?"var(--green)":"var(--red)",marginBottom:10}}>{connectMsg.text}</div>}
               <button className="btn btn-vet btn-sm" disabled={connecting} onClick={async()=>{
@@ -1180,10 +1180,10 @@ function SupportPage() {
   const [open,setOpen] = useState(null);
   const faqs = [
     {q:"How do predictions work?",a:"You stake VET on the outcome of a market. If correct, you win a share of the total pool proportional to your stake."},
-    {q:"How are markets resolved?",a:"Markets are resolved by the admin manually based on real-world outcomes. Results are recorded on the VeChain blockchain."},
-    {q:"Is my VET safe?",a:"All funds are held in smart contracts on VeChain — fully non-custodial. Pooz never holds your assets directly."},
+    {q:"How are markets resolved?",a:"Markets are resolved by the admin manually based on real-world outcomes. Results are recorded on-chain."},
+    {q:"Is my VET safe?",a:"All funds are held in smart contracts on-chain — fully non-custodial. Pooz never holds your assets directly."},
     {q:"What are the fees?",a:"Pooz charges a 1.5% platform fee on winning payouts only. No fees for deposits, withdrawals, or losing predictions."},
-    {q:"How do I withdraw?",a:"Go to the Wallet page and tap Withdraw. Funds arrive in your connected wallet within 1–3 minutes on VeChain."},
+    {q:"How do I withdraw?",a:"Go to the Wallet page and tap Withdraw. Funds arrive in your connected wallet within 1–3 minutes."},
   ];
   return (
     <div className="pg">
